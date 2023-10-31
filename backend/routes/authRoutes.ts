@@ -7,7 +7,7 @@ import cors from 'cors'
 const router: Router = Router();
 
 router.use(cors({
-   origin: "http://localhost:5173",
+   origin: "http://localhost:5174",
    credentials: true,
    preflightContinue: true
 }))

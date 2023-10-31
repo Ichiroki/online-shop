@@ -1,3 +1,4 @@
+import axios from "axios";
 import { FormEvent, useState } from "react";
 
 function Login() {
@@ -13,21 +14,18 @@ function Login() {
       const password = target.password.value
 
       try {
-         await fetch("http://localhost:3000/login", {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            body: JSON.stringify({
-               email,
-               password
-            }),
-            headers: {
-               "Content-Type": "application/json",
-            },
-         }).then((data) => {
-            console.log(data)
-            window.location.href = '/' 
+         const response = await axios.post("http://localhost:3000/login", {
+            email,
+            password
          })
+
+         console.log(response.data)
+
+         if(response.data.token) {
+            const data = response.data.user
+            localStorage.setItem('authenticated', JSON.stringify(data))
+            window.location.href = '/'
+         }
       } catch(e) {
          console.log(e)
       }
