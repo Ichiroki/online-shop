@@ -13,8 +13,7 @@ router.use(cors({
 }))
 
 // Credentials
-// router.get('*', checkUser)
-router.get('/')
+router.get('*', checkUser)
 router.get('/', (req, res) => res.render('home', { active: 'Home' }))
 
 // Authentication
