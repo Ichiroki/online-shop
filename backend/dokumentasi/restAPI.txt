@@ -1,0 +1,23 @@
+untuk disini, saya menggunakan extension dari vscode yang bernama Rest Client untuk menggantikan Postman. untuk mengaktifkannya, cukup beri nama filenya request.rest (nama bebas yang penting formatnya rest). 
+
+di dalam file tersebut, saya ingin membuat sebuah data yang kolomnya email dan password. 
+
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+   "email" : "rizqiawanf@ymail.com",
+   "password" : "12345678"
+}
+
+### 
+POST http://localhost:3000/signup
+Content-Type: application/json
+
+{
+   "email" : "rizqiawanf@ymail.com",
+   "password" : "12345678"
+}
+
+pada baris pertama, route post yang mengarah ke halaman login, Content-Typenya berubah menjadi application/json agar mengembalikan nilainya sebagai json. sama seperti pada halnya signup
+

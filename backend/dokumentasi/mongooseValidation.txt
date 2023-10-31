@@ -1,0 +1,32 @@
+Mongoose memiliki sebuah sistem validation yang dimana, pada kolom di suatu schema, lebih tepatnya di properti required. nilainya dapat dijadikan sebagai array. sebagai contoh :
+
+email: {
+   type: String,
+   required: [true, 'Please enter an email'], -> ini validation
+   unique: true,
+   lowercase: true,
+},
+
+ini adalah bentuk validation dari Mongoose. Namun ada contoh lain selain menempatkannya di dalam properti required, sebagai contoh :
+
+password: {
+   type: String,
+   required: [true, "Please enter a password"],
+   minlength: [8, "Minimum password length is 8 character"]
+}
+
+yang dimana, kalau kita masukkan kedalam sebuah schema, akan menjadi seperti ini :
+const userSchema = new mongoose.Schema({
+   email: {
+      type: String,
+      required: [true, "Please enter an email"],
+      unique: true,
+      lowercase: true,
+      validate: [isEmail, 'Please enter a valid email']
+   },
+   password: {
+      type: String,
+      required: [true, "Please enter a password"],
+      minlength: [8, "Minimum password length is 8 character"]
+   }
+})

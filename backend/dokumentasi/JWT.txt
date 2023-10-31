@@ -1,0 +1,59 @@
+JSON Web Tokens
+
+Teori :
+
+User diminta untuk mengisi form di tampilan login, lalu setelah user submit. browser mengirimkan nilai-nilai dari form login ke server. Kemudian server memeriksa kredensialnya di dalam database, jika data yang dikirimkan sesuai dengan data yang di database, server membuat Web Tokens yang kemudian dikirimkan ke browser untuk user.
+
+Penandaan dalam JWT
+
+Encoded : 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikl6enkiLCJpYXQiOjE1MTYyMzkwMjJ9.tcVDB5LNc7-hWE04vipKRMgoFAmaBxK_c1SC4YpZDVQ
+
+Decoded : 
+
+   Header :
+   {
+      "alg": "HS256",
+      "typ": "JWT"
+   }
+
+   Payload : 
+   {
+      "sub": "1234567890",
+      "name": "Izzy",
+      "iat": 1516239022
+   }
+
+   Signature :
+   HMACSHA256(
+      base64UrlEncode(header) + "." +
+      base64UrlEncode(payload),
+      
+      your-256-bit-secret
+
+   ) secret base64 encoded
+
+Diatas. terdapat sebuah tulisan yang di Encoded dan Decoded, ini adalah bentuk dari web token yang dimana Header, Payload, dan Signature dirubah menjadi sebuah token yang dihash. Token tersebut dipisah dengan menggunakan ".", yang dimana pada bagian pertama adalah Header, yang kedua Payload, dan yang ketiga Signature.
+
+JWT Signing
+
+- Header
+Memberitahu server tipe apa signature yang sedang digunakan (meta)
+
+- Payload
+Digunakan untuk mengidentifikasi user (contoh id, nama, dan umur)
+
+- Signature
+Membuat token keamanan (seperti stempel otentikasi)
+
+bagaimana cara kerja secara sistematis diatas ?
+
+Ketika server membuat jwt setelah user berhasil login atau signup, kemudian itu membuat bagian header dan payload terlebih dahulu dan encode keduanya. 
+
+Kemudian, untuk menandakan tokennya atau menambahkan signaturenya, hal tersebut mengambil kedua bagian (Header, Payload) dan hash keduanya yang dinamakan dengan Secret yaitu sebuah string rahasia keamanan yang disimpan dalam server, Secret ini harus membiarkan itu rahasia sebab itu adalah sebuah kunci untuk membuka jwt dan hanya satu-satunya cara untuk verifikasi sebuah token. 
+
+Jadi, kamu tidak pernah publikasi secret ke dalam bentuk repository publik yang dimana semua orang bisa lihat.
+
+Jadi, ketika ketiganya dihash secara bersamaan, itu membuatkan sebuah token signature sekarang, token signaturenya ditambahkan ke dalam bagian akhir dari jwt setelah dua bagian lainnya dan dapat dikirmkan ke browser. Jadi, hash yang asli menghasilkan token yang terlihat seperti ini :
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikl6enkiLCJpYXQiOjE1MTYyMzkwMjJ9.tcVDB5LNc7-hWE04vipKRMgoFAmaBxK_c1SC4YpZDVQ

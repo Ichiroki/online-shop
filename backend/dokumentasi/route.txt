@@ -1,0 +1,30 @@
+Bagaimana cara register route di expressJS ? 
+
+untuk meregistrasi route, gunakan app.get() | app.post() | app.delete() -> ini sesuai kebutuhan
+
+app.get() -> untuk merender tampilan
+app.post() -> untuk melakukan interaksi backend (interaksi ini seperti memasukkan suatu data ke database, otentikasi, dan otorisasi)
+app.delete() -> untuk melakukan penghapusan di suatu halaman
+
+Routes yang akan digunakan kali ini :
+
+app.get('/signup')
+app.post('/signup')
+app.get('/login')
+app.login('/login')
+app.get('/logout') -> route ini akan diregistrasi ketika dibutuhkan
+
+express.Router() function digunakan untuk membuat sebuah object router baru. Function ini digunakan ketika pengembang ingin membuat sebuah object router baru di programnya untuk mengendalikan request.
+
+pada program ini, Router dibuat seperti ini :
+
+const { Router } = require('express')
+
+const router = Router()
+
+router.get('/signup', () => {})
+router.post('/signup', () => {})
+
+module.exports = router
+
+untuk Router diatas, expressJS masih berada dirilisan versi ^4.17.1 (periksa package.json untuk mengetahui lebih lanjut)

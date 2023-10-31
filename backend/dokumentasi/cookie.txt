@@ -1,0 +1,36 @@
+Cookie
+
+Cookie biasanya memberikan kita sebuah cara untuk menyimpan data di browsernya user. Jadi, datanya bisa menjadi apapun yang kita inginkan, seperti nama, umur, dan nomor
+
+Bagaimana cara kerja Cookie ?
+
+ketika sebuah request dikirimkan ke server, kita bisa membuat sebuah Cookie, di saat itu dan kita bisa memutuskan pada data apa yang ditangkap oleh cookie, seperti berapa lama cookie akan bertahan lama didalam browser dan otomatis dihapus.
+
+Kemudian, cookie dikembalikan kepada browser tepatnya di dalam server response dan browser meregistrasikannya. Dan saat itu, Cookie menyimpan data di dalam browser user.
+
+Setiap request yang browser buat setelah itu dari server kita, itu mengirimkan apapun cookies simpan ke server dengan request dan dari server kita bisa akses.
+
+Namun, ada yang harus diperhatikan ketika menggunakan Cookies dan JWT :
+- wajib menggunakan CSRF -> tanpa ini, hacker dapat mengambil status otentikasi user
+
+Cookie dapat diregenerasi dengan menggunakan res.cookie() -> wajib menggunakan TPM yang bernama cookie-parser
+contoh penggunaan cookie :
+
+res.cookie('newUser', false)
+
+respond akan memberikan cookie baru yang bernama newUser dengan nilai false, ketika user close browsernya. cookie tersebut akan hilang. supaya cookie tersebut tidak hilang ketika user close browsernya. tambahkan satu parameter lagi berbentuk object, lalu buat properti yang bernama maxAge, contohnya seperti ini :
+
+res.cookie('isEmployee', true, {maxAge: 1000 * 60 * 60 * 24})
+
+dari contoh diatas, kita dapat memberikan umur untuk cookie yang akan diberikan oleh respond.
+
+Jika websitenya menggunakan HTTPS dan bukan lagi HTTP, developer dapat menambahkan properti satu lagi yang bernama secure. penggunaan secure dicontohkan sebagai berikut :
+
+res.cookie('isEmployee', true, {maxAge: 1000 * 60 * 60 * 24, secure: true})
+
+Kita dapat mengganti "secure" dengan "httpOnly" jika browser masih menggunakan HTTP. Namun, kurangnya cookie tersebut tidak dapat ditampilkan melalui frontend, melainkan hanya bisa ditransfer melalui http. contoh penggunaannya sebagai berikut :
+
+res.cookie('isEmployee', true, {maxAge: 1000 * 60 * 60 * 24, httpOnly: true})
+
+Jika website sudah tahap production, developer diharuskan hanya menggunakan cookie otentikasi lewat dari keamanan koneksi HTTPS dan jika cookie tersebut tidak ingin user dapat mengakses dan memodifikasinya. Jadi, disarankan untuk menggunakan secure HTTPS jika website untuk pengerjaan otentikasi dalam production
+

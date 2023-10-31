@@ -1,0 +1,5 @@
+Setup hanyalah pengenalan tampilan website, dan juga kemampuan apa saja yang dibutuhkan, kemampuan yang dibutuhkan :
+
+- NodeJS
+- ExpressJS
+- MongoDB

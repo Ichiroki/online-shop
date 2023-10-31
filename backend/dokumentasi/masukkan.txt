@@ -1,0 +1,6 @@
+membuat state management buat middleware login
+
+tugas :
+1. cari manfaat postgreSQL, NoSQL, dan MYSQL.
+2. Migrasikan project ini ke TypeScript.
+3. Buat Product, dan add to cart.
