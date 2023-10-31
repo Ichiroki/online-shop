@@ -1,4 +1,37 @@
+import { FormEvent } from "react"
+
 function Signup() {
+   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+
+      const target = e.target as HTMLFormElement
+      const name = target.name.value
+      const email = target.email.value
+      const password = target.password.value
+      const confPassword = target.confPassword.value
+      
+      try {
+         await fetch("http://localhost:3000/signup", {
+            method: "POST",
+            mode: "cors",
+            body: JSON.stringify({
+               name,
+               email,
+               password,
+               confPassword
+            }),
+            headers: {
+               "Content-Type": "application/json",
+            },
+         }).then((data) => {
+            console.log(data)
+            window.location.href = '/login' 
+         })
+      } catch(e) {
+         console.log(e)
+      }
+   }
+
    return (
       <>
          <div className="row">
@@ -7,8 +40,7 @@ function Signup() {
                   <div className="shadow card-body">
                      <h5 className="text-center uppercase fw-semibold card-title">Signup</h5>
                      <div className="card-text">
-                     {/* onSubmit={handleSubmit} */}
-                     <form >
+                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                            <label htmlFor="name" className="form-label">Name</label>
                            <input type="text" name="name" className="form-control" id="name"/>
@@ -31,7 +63,7 @@ function Signup() {
                               </div>
                            </div>
                         </div>
-                        <button type="submit" className="btn btn-success">Login</button>
+                        <button type="submit" className="btn btn-success">Submit</button>
                      </form>
                      </div>
                   </div>

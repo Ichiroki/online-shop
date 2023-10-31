@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 
 function Login() {
 
@@ -44,8 +44,8 @@ function Login() {
                      <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                            <label htmlFor="email" className="form-label">Email address</label>
-                           <input type="email" name="email" className="form-control" id="email" aria-describedby="emailHelp"/>
-                           <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+                           <input type="email" name="email" className="form-control" id="email"/>
+                           <div className="text-danger form-text">Email salah</div>
                         </div>
                         <div className="mb-3">
                            <label htmlFor="password" className="form-label">Password</label>
