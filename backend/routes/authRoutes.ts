@@ -7,7 +7,7 @@ import cors from 'cors'
 const router: Router = Router();
 
 router.use(cors({
-   origin: "http://localhost:5174",
+   origin: "http://localhost:5173",
    credentials: true,
    preflightContinue: true
 }))
@@ -29,7 +29,5 @@ router.get('/menu', authMiddleware, menuController.menuGet)
 
 // For API
 router.get('/api/menu', menuController.menuGetAPI)
-
-// ['POST','PUT','PATCH','GET','DELETE','OPTIONS']
 
 export default router;

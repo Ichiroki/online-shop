@@ -9,35 +9,11 @@
           <h5 class="card-title"><%= menu.name %></h5>
           <p class="card-text"><%= menu.price %></p>
           <p class="card-text"><%= menu.desc %></p>
-          <a href="#" class="btn btn-primary" onclick="addToCart(<%= menu.id %>)">Order</a>
+          <a href="#" class="btn btn-primary">Order</a>
         </div>
       </div>
     </div>
   <% }) %>
 </div>
-
-<script>
-  function addToCart(idProduct) {
-    const idUser = localStorage.getItem('id')
-
-    fetch('/menuAdd', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      idProduct,
-      idUser
-    })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Do something with the response data
-    })
-    .catch(error => {
-      // Handle the error
-    });
-  }
-</script>
 
 <%- include('../partials/footer'); -%>

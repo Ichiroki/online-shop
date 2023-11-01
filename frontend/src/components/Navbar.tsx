@@ -1,9 +1,31 @@
 import { Button, Container, Nav, NavDropdown, Navbar as NavbarBs } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
 import { useShoppingCart } from "../context/ShoppingCartContext"
+import axios from "axios"
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "../context/AuthContext"
 
 function Navbar() {
-  const authenticatedUser = JSON.parse(localStorage.getItem('authenticated')!)
+  
+  // const [logoutLink, setLogoutLink] = useState('')
+
+  const { authenticatedUser } = useContext(AuthContext)
+
+  async function logout() {
+    try {
+      const response = await fetch('http://localhost:3000/logout', {
+        method: "GET",
+        credentials: "include"
+      })
+      const data = await response.json()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    logout()
+  }, [])
 
   const { openCart, cartQuantity } = useShoppingCart()
   return (
@@ -21,13 +43,12 @@ function Navbar() {
           </Nav.Link>
         </Nav>
         {authenticatedUser ? (
-          <NavDropdown title={authenticatedUser.name} id="user-dropdown">
+          <NavDropdown title={authenticatedUser?.name} id="user-dropdown">
             <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
             <NavDropdown.Item href="#action/3.1">Setting</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item href="">Log out</NavDropdown.Item>
+            <NavDropdown.Item onClick={logout}>Log out</NavDropdown.Item>
           </NavDropdown>
-          
         ) : (
               <Nav>
                 <Nav.Link to="/login" as={NavLink}>

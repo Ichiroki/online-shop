@@ -1,10 +1,7 @@
 import axios from "axios";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 
 function Login() {
-
-
-   const [token, setToken] = useState(null)
 
    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -18,8 +15,6 @@ function Login() {
             email,
             password
          })
-
-         console.log(response.data)
 
          if(response.data.token) {
             const data = response.data.user
