@@ -5,8 +5,6 @@ import crypto from 'crypto'
 const prisma = new PrismaClient()
 
 async function run() {
-   const randUUID = crypto.randomUUID()
-
    const salt = await bcrypt.genSalt()
    const hashed = await bcrypt.hash('password', salt)
 
@@ -34,21 +32,24 @@ async function run() {
             name: 'Ice Cappucino Coffee',
             desc: 'Cappucino coffee that can bring back your mood',
             price: 15000,
-            stock: 100,
+            image: 'iceCappucinoCoffee.png',
+            available: true,
          },
          {
             id: '3dd06ca6-b8d3-4833-9800-a884453a41c5',
             name: 'Mocha Latte',
             desc: 'Mocha Latte that can bring back your mood',
             price: 25000,
-            stock: 100,
+            image: 'mochaLatte.jpg',
+            available: true,
          },
          {
             id: 'd54c606e-2246-4916-87a6-587fc9ac937b',
             name: 'Black Coffe',
             desc: 'Black Coffee that can bring back your mood',
             price: 10000,
-            stock: 100,
+            image: 'blackCoffee.png',
+            available: true,
          },
       ]
    })

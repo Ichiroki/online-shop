@@ -3,17 +3,74 @@
 <div class="row">
   <% menus.forEach(menu => { %>
     <div class="col-md-4">
-      <div class="card">
-        <img src="..." class="card-img-top" alt="...">
+      <div class="card" style="width: 27rem;">
+        <img src="/img/<%= menu.image %>" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title"><%= menu.name %></h5>
           <p class="card-text"><%= menu.price %></p>
           <p class="card-text"><%= menu.desc %></p>
-          <a href="#" class="btn btn-primary">Order</a>
+          <a  class="btn btn-primary" id="decrease" data-menu-id="<%= menu.id %>" data-menu-quantity=1>Decrease</a>
+          <a  class="btn btn-primary" id="order" data-menu-id="<%= menu.id %>" data-menu-quantity=1>Order</a>
         </div>
       </div>
     </div>
   <% }) %>
 </div>
+
+<script>
+  const order = document.querySelectorAll('#order')
+  const decrease = document.querySelectorAll('#decrease')
+
+  order.forEach(button => {    
+    button.addEventListener('click', async function(e) {
+      e.preventDefault()
+      const userId = '<%= authenticated.id %>'
+      const productId = button.dataset.menuId
+      const quantity = button.dataset.menuQuantity
+      
+      try {
+        const response = await fetch('/add-to-cart', {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId,
+            productId,
+            quantity: parseInt(quantity)
+          })
+        })
+      } catch(e) {
+        console.log(e)
+      }
+    })
+  })
+
+  decrease.forEach(button => {    
+    button.addEventListener('click', async function(e) {
+      e.preventDefault()
+      const userId = '<%= authenticated.id %>'
+      const productId = button.dataset.menuId
+      const quantity = button.dataset.menuQuantity
+      try {
+        const response = await fetch('/delete-to-cart', {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId,
+            productId,
+            quantity: parseInt(quantity)
+          })
+        })
+
+        console.log(response)
+      } catch(e) {
+        console.log(e)
+      }
+    })
+  })
+</script>
 
 <%- include('../partials/footer'); -%>

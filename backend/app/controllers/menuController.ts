@@ -1,13 +1,17 @@
-import { Prisma, PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
+import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
 export const menuGet = async (req, res, next) => {
+   const token = req.cookies.accessToken
+
    try {
       const menus = await prisma.products.findMany()
       res.render('menu/menu', {
          menus,
-         active: 'Menu'
+         active: 'Menu',
+         token
       })
    } catch(e) {
       console.log(e)

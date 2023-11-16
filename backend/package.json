@@ -42,7 +42,7 @@
     "@types/uuid": "^9.0.5",
     "connect-flash": "^0.1.1",
     "express-session": "^1.17.3",
-    "prisma": "^5.4.2",
+    "prisma": "^5.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },

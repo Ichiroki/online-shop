@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,17 +7,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id                String             @id @unique
-  email             String             @unique
-  name              String
-  password          String
+model cart {
+  id        BigInt   @id @default(autoincrement())
+  userId    String
+  productId String
+  quantity  Int
+  products  products @relation(fields: [productId], references: [id], map: "Cart_productId_fkey")
+  users     users    @relation(fields: [userId], references: [id], map: "Cart_userId_fkey")
+
+  @@unique([userId, productId], map: "Cart_userId_productId_key")
+  @@index([productId], map: "Cart_productId_fkey")
 }
 
-model Products {
-  id                String             @id @unique
-  name              String
-  desc              String             @db.VarChar(255)
-  price             Decimal            @db.Decimal(15, 2)
-  stock             Int
+model products {
+  id        String  @id @unique(map: "Products_id_key")
+  name      String
+  desc      String  @db.VarChar(255)
+  price     Decimal @db.Decimal(15, 2)
+  image     String?
+  available Boolean
+  cart      cart[]
+}
+
+model order {
+  id             String   @id @unique @default(uuid())
+  no_order       Int      @unique
+  user_id        String
+  product_id     String
+  created_at     DateTime
+  updated_at     DateTime
+  status         String
+  total_price    Decimal
+  shipping_addr  String
+  payment_method String
+}
+
+model users {
+  id       String @id @unique(map: "Users_id_key")
+  email    String @unique(map: "Users_email_key")
+  name     String
+  password String
+  cart     cart[]
 }
