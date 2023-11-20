@@ -62,7 +62,7 @@ export const login_post = async (req, res) => {
   const {email, password} = req.body
 
   try {
-      const auth = await LoginUser.spa(req.body)
+      const auth = await LoginUser.spa({email, password})
 
       if(!auth.success) {
         res.status(401).json({error: auth.error.flatten().fieldErrors})
@@ -80,7 +80,7 @@ export const login_post = async (req, res) => {
             }
           })
         } else {
-          const comPw = await bcrypt.compare(password, user.password)
+          const comPw = await bcrypt.compare(auth.data.password, user.password)
 
           if(!comPw) {
             res.status(401).json({
@@ -95,6 +95,7 @@ export const login_post = async (req, res) => {
               httpOnly: true,
               expire: '1h',
               secure: true,
+              samesite: true
             })
         
             res.status(200).json({user, message: "Login sukses", token})
@@ -109,7 +110,7 @@ export const login_post = async (req, res) => {
 }
 
 export const logout_get = (req, res) => {
-  res.cookie('accessToken', '', { maxAge: 1 });
+  res.clearCookie('accessToken')
   res.redirect('/');
 }
 

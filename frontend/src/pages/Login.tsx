@@ -1,24 +1,29 @@
 import axios from "axios";
-import { FormEvent } from "react";
+import { useContext, useState } from "react";
 
 function Login() {
 
-   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+   const [email, setEmail] = useState('')
+   const [password, setPassword] = useState('')
+
+   const handleSubmit = async (e) => {
       e.preventDefault()
 
-      const target = e.target as HTMLFormElement
-      const email = target.email.value
-      const password = target.password.value
-
       try {
-         const response = await axios.post("http://localhost:3000/login", {
+         const response = await axios.post("/login", {
             email,
             password
+         }, { 
+            withCredentials: true, 
+            headers : {
+               'Content-Type': 'application/json'
+            }
          })
 
          if(response.data.token) {
             const data = response.data.user
             localStorage.setItem('authenticated', JSON.stringify(data))
+            // setAuthenticatedUser(data)
             window.location.href = '/'
          }
       } catch(e) {
@@ -34,18 +39,18 @@ function Login() {
                   <div className="shadow card-body">
                      <h5 className="text-center uppercase fw-semibold card-title">Login</h5>
                      <div className="card-text">
-                     <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                           <label htmlFor="email" className="form-label">Email address</label>
-                           <input type="email" name="email" className="form-control" id="email"/>
-                           <div className="text-danger form-text">Email salah</div>
-                        </div>
-                        <div className="mb-3">
-                           <label htmlFor="password" className="form-label">Password</label>
-                           <input type="password" name="password" className="form-control" id="password"/>
-                        </div>
-                        <button type="submit" className="btn btn-success">Login</button>
-                     </form>
+                        <form onSubmit={handleSubmit}>
+                           <div className="mb-3">
+                              <label htmlFor="email" className="form-label">Email address</label>
+                              <input type="email" name="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                              {/* <div className="text-danger form-text">Email salah</div> */}
+                           </div>
+                           <div className="mb-3">
+                              <label htmlFor="password" className="form-label">Password</label>
+                              <input type="password" name="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                           </div>
+                           <button type="submit" className="btn btn-success">Login</button>
+                        </form>
                      </div>
                   </div>
                </div>

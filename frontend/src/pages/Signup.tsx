@@ -11,7 +11,7 @@ function Signup() {
       const confPassword = target.confPassword.value
       
       try {
-         await fetch("http://localhost:3000/signup", {
+         await fetch("/signup", {
             method: "POST",
             mode: "cors",
             body: JSON.stringify({

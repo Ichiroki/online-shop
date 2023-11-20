@@ -6,10 +6,10 @@ import authRoutes from './routes/authRoutes'
 const App = express()
 
 // middleware
-
 App.use(express.static('public'))
 App.use(express.json())
 App.use(cookieParser())
+
 
 App.use(session({
    secret: 'accessToken',

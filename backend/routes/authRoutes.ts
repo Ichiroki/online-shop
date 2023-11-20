@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { addToCart, deleteFromCart } from '../app/controllers/addToCartController';
 import authController from '../app/controllers/authController';
 import menuController from '../app/controllers/menuController';
-import { authMiddleware, checkUser } from '../app/middleware/authMiddleware';
+import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
 
 const router: Router = Router();
 
@@ -22,15 +22,12 @@ router.get('/signup', authController.signup_get)
 router.post('/signup', authController.signup_post)
 router.get('/login', authController.login_get)
 router.post('/login', authController.login_post)
-router.options('/login')
 router.get('/logout', authController.logout_get)
 
 // Menu
-router.get('/menu', authMiddleware, menuController.menuGet)
+router.get('/menu', requireAuth, menuController.menuGet)
 
-// For API
-router.get('/api/menu', menuController.menuGetAPI)
-router.post('/add-to-cart', checkUser, async(req, res) => {
+router.post('/add-to-cart', requireAuth, async(req, res) => {
    try {
       const { userId, productId, quantity } = req.body
       const addMenuToCart = await addToCart(userId, productId, quantity)
@@ -39,7 +36,7 @@ router.post('/add-to-cart', checkUser, async(req, res) => {
       console.log(e)
    }
 })
-router.post('/delete-to-cart', checkUser, async(req, res) => {
+router.post('/delete-to-cart', requireAuth, async(req, res) => {
    try {
       const { userId, productId, quantity } = req.body
       const deleteMenuFromCart = await deleteFromCart(userId, productId, quantity)
@@ -48,5 +45,9 @@ router.post('/delete-to-cart', checkUser, async(req, res) => {
       console.log(e)
    }
 })
+
+// For API
+router.get('/api/menu', menuController.menuGetAPI)
+
 
 export default router;

@@ -1,18 +1,18 @@
 import { PrismaClient } from '@prisma/client'
-import { Request } from 'express';
 import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
-export const authMiddleware = async (req: Request, res, next) => {
-  const token = req.cookies.accessToken;
-  // check json web token exists & is verified
+export const requireAuth = async (req, res, next) => {
+  const token = req.cookies.accessToken
+
   try {
     if (token) {
       jwt.verify(token, 'accessToken', async (err, decodedToken) => {
           if (err) {
             res.redirect('/login')
           } else {
+            console.log(decodedToken)
             next()
           }
         }
@@ -28,30 +28,27 @@ export const authMiddleware = async (req: Request, res, next) => {
 export const checkUser = async (req, res, next) => {
   const token = req.cookies.accessToken;
 
-  // check json web token exists & is verified
   try {
     if (token) {
       jwt.verify(token, 'accessToken', async (err, decodedToken) => {
-          if (err) {
-            res.locals.authenticated = null
-            next()
-          } else {
-            let user = await prisma.users.findFirst({
-              where: {
-                id: decodedToken.id
-              }
-            })
-            res.locals.authenticated = user
-            next()
-          }
+        if (err) {
+          res.locals.authenticated = null;
+        } else {
+          let user = await prisma.users.findFirst({
+            where: {
+              id: decodedToken.id
+            }
+          });
+          res.locals.authenticated = user;
         }
-      )
+        next();
+      });
     } else {
-      res.locals.authenticated = null
-      next()
+      res.locals.authenticated = null;
+      next();
     }
   } catch(err) {
-    console.log('storing information failed')
-    next()
+    console.log('storing information failed');
+    next();
   }
-}
+};

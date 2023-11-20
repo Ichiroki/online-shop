@@ -3,14 +3,14 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import About from "./pages/About";
-import { ShoppingCartProvider } from "./context/ShoppingCartContext";
+// import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import { Container } from "react-bootstrap";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
 function App() {
   return ( 
-    <ShoppingCartProvider>
+    <>
       <Navbar />
         <Container className="mb-4">
           <Routes>
@@ -21,7 +21,7 @@ function App() {
             <Route path="/signup" element={<Signup />}></Route>
           </Routes>
         </Container>
-    </ShoppingCartProvider>
+    </>
    );
 }
 
