@@ -2,6 +2,31 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
 
+export const cartGet = async(req, res) => {
+
+    const userData = res.locals.authenticated
+
+    try {
+        if(userData && userData.id) {
+            const carts = await prisma.cart.findMany({
+                where: {
+                    userId: res.locals.authenticated.id
+                }
+            })
+            const cartsStringified = carts.map(cart => ({
+                ...cart,
+                id: cart.id.toString()
+            }))
+
+            res.status(201).json(cartsStringified);
+        } else {
+            res.status(404).json({message: "There is not authenticated user"})
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 export const addToCart = async (userId: string, productId: string, quantity: number) => {
     try {
         const existingCartItem = await prisma.cart.findUnique({

@@ -1,11 +1,13 @@
 import cors from 'cors';
 import { Router } from 'express';
-import { addToCart, deleteFromCart } from '../app/controllers/addToCartController';
+import { addToCart, cartGet, deleteFromCart } from '../app/controllers/addToCartController';
 import authController from '../app/controllers/authController';
 import menuController from '../app/controllers/menuController';
 import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
+import csurf from 'csurf'
 
 const router: Router = Router();
+const csrfProtection = csurf({cookie: true})
 
 router.use(cors({
    origin: "http://localhost:5173",
@@ -14,7 +16,7 @@ router.use(cors({
 }))
 
 // Credentials
-router.get('*', checkUser)
+router.get('*', checkUser, csrfProtection)
 router.get('/', (req, res) => res.render('home', { active: 'Home' }))
 
 // Authentication
@@ -27,6 +29,7 @@ router.get('/logout', authController.logout_get)
 // Menu
 router.get('/menu', requireAuth, menuController.menuGet)
 
+router.get('/cart', cartGet)
 router.post('/add-to-cart', requireAuth, async(req, res) => {
    try {
       const { userId, productId, quantity } = req.body

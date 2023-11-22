@@ -1,10 +1,15 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useRecoilState } from 'recoil';
+import { authenticatedUserState } from "../store/AuthStore";
+import cryptoRandomString from "crypto-random-string";
 
 function Login() {
 
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
+   const [csrfToken, setCsrfToken] = useState(cryptoRandomString({length: 32, type: 'url-safe'}))
+   const [authUser, setAuthUser] = useRecoilState(authenticatedUserState)
 
    const handleSubmit = async (e) => {
       e.preventDefault()
@@ -12,18 +17,20 @@ function Login() {
       try {
          const response = await axios.post("/login", {
             email,
-            password
+            password,
+            csrfToken
          }, { 
             withCredentials: true, 
             headers : {
                'Content-Type': 'application/json'
-            }
+            },
          })
 
          if(response.data.token) {
             const data = response.data.user
+
+            setAuthUser(data)
             localStorage.setItem('authenticated', JSON.stringify(data))
-            // setAuthenticatedUser(data)
             window.location.href = '/'
          }
       } catch(e) {
@@ -41,6 +48,7 @@ function Login() {
                      <div className="card-text">
                         <form onSubmit={handleSubmit}>
                            <div className="mb-3">
+                              <input type="hidden" value={csrfToken} onChange={(e) => setCsrfToken(e.target.value)} style={{ display: 'none' }} readOnly/>
                               <label htmlFor="email" className="form-label">Email address</label>
                               <input type="email" name="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                               {/* <div className="text-danger form-text">Email salah</div> */}

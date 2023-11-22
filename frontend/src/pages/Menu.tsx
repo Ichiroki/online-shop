@@ -5,17 +5,11 @@ import { useEffect } from "react"
 
 function Menu() {
   const menus = useRecoilValueLoadable(menuState)
-  const { fetchMenu, menu } = useMenu()
+  const { fetchMenu } = useMenu()
 
   useEffect(() => {
     fetchMenu()
   }, [])
-
-  useEffect(() => {
-    if(menus.state === 'hasValue') {
-      console.log(menus.contents)
-    }
-  }, [menus])
 
   return (
     <>

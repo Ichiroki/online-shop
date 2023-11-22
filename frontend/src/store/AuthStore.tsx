@@ -1,27 +1,10 @@
-// import axios from 'axios'
-// import { selector } from 'recoil'
-// import Login from '../pages/Login'
+import { atom } from 'recoil'
 
-// const authUser = selector({
-//     key: 'authenticated',
-//     get: async ({get}) => {
-//         let user = null
+export const getUserData = () => {
+    const user = localStorage.getItem('authenticated')
+}
 
-//         try {
-//             let {data} = await axios.post("/login", {
-//                 email,
-//                 password
-//              }, { 
-//                 withCredentials: true, 
-//                 headers : {
-//                    'Content-Type': 'application/json'
-//                 }
-//              })
-//              user = {user: data}
-//         } catch(e) {
-//             user = {user: e.message}
-//         }
-//     }
-// })
-
-// export default authUser
+export const authenticatedUserState = atom({
+    key: "authUser",
+    default: "Fahrezi",
+})

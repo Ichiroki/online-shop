@@ -15,17 +15,26 @@ export const menuState = atom<MenuItem[]>({
   default: [],
 });
 
+export const loadingState = atom({
+  key: 'loading',
+  default: true
+})
+
 export function useMenu() {
-  const [menu, setMenu] = useRecoilState(menuState);
+  const [menu, setMenu] = useRecoilState(menuState)
+  const [loading, setLoading] = useRecoilState(loadingState)
 
   const fetchMenu = async () => {
+    setLoading(true)
     try {
       const response = await axios.get('http://localhost:3000/api/menu');
-      setMenu(response.data);
+      setMenu(response.data)
+      setLoading(false)
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      setLoading(true)
     }
   };
 
-  return { menu, fetchMenu };
+  return { menu, fetchMenu, loading };
 }

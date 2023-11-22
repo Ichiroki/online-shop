@@ -40,8 +40,8 @@ export const checkUser = async (req, res, next) => {
             }
           });
           res.locals.authenticated = user;
+          next();
         }
-        next();
       });
     } else {
       res.locals.authenticated = null;

@@ -16,16 +16,24 @@ const createToken = (id: string) => {
   });
 };
 
+const generateCSRFToken = () => {
+  return crypto.randomBytes(32).toString('hex')
+}
+
+const csrfToken = generateCSRFToken()
+
 // controller actions
 export const signup_get = (req, res) => {
   res.render('auth/signup', {
-    active: 'Signup'
+    active: 'Signup',
+    token: csrfToken
   });
 }
 
 export const login_get = (req, res) => {
   res.render('auth/login', {
-    active: 'Login'
+    active: 'Login',
+    token: csrfToken
   });
 }
 
@@ -59,46 +67,50 @@ export const signup_post = async (req, res) => {
 }
 
 export const login_post = async (req, res) => {
-  const {email, password} = req.body
+  const {email, password, csrfToken} = req.body
 
   try {
+      const csrf = csrfToken
       const auth = await LoginUser.spa({email, password})
 
-      if(!auth.success) {
-        res.status(401).json({error: auth.error.flatten().fieldErrors})
+      if(csrfToken !== csrf) {
+        console.log('Invalid CSRF')
       } else {
-        const user = await prisma.users.findFirst({
-          where: {
-            email: auth.data.email
-          }
-        })
-
-        if(!user) {
-          res.status(401).json({
-            error: {
-              email: 'Email salah',
+        if(!auth.success) {
+          res.status(401).json({error: auth.error.flatten().fieldErrors})
+        } else {
+          const user = await prisma.users.findFirst({
+            where: {
+              email: auth.data.email
             }
           })
-        } else {
-          const comPw = await bcrypt.compare(auth.data.password, user.password)
-
-          if(!comPw) {
+  
+          if(!user) {
             res.status(401).json({
               error: {
-                password: 'Password salah'
+                email: 'Email salah',
               }
             })
           } else {
-            const token = createToken(user.id)
-
-            res.cookie('accessToken', token, {
-              httpOnly: true,
-              expire: '1h',
-              secure: true,
-              samesite: true
-            })
-        
-            res.status(200).json({user, message: "Login sukses", token})
+            const comPw = await bcrypt.compare(auth.data.password, user.password)
+  
+            if(!comPw) {
+              res.status(401).json({
+                error: {
+                  password: 'Password salah'
+                }
+              })
+            } else {
+              const token = createToken(user.id)
+  
+              res.cookie('accessToken', token, {
+                httpOnly: true,
+                expire: '259200s',
+                secure: true,
+              })
+          
+              res.status(200).json({user, message: "Login sukses"})
+            }
           }
         }
       }

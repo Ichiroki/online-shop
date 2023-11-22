@@ -1,7 +1,28 @@
-import { useState } from "react";
-import { Button, Offcanvas } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, Offcanvas, Stack } from "react-bootstrap";
 
-function CartOffcanvas({cartItems}) {
+function CartOffcanvas({children}) {
+
+    const [carts, setCarts] = useState([])
+
+    const getCartsData = async () => {
+        try {
+          const response = await fetch('http://localhost:3000/cart', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+          })
+          .then((res) => res.json())
+          .then((data) => setCarts(data))
+        } catch (error) {
+          console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getCartsData()
+    }, [])
 
     const [show, setShow] = useState(false)
 
@@ -19,15 +40,9 @@ function CartOffcanvas({cartItems}) {
                 <Offcanvas.Title>Trolimu</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                {cartItems.length > 0 ? (
-                    <ul>
-                    {cartItems.map((item) => (
-                        <li key={item.id}>{item.name}</li>
-                    ))}
-                    </ul>
-                ) : (
-                    <p>Trolimu kosong.</p>
-                )}
+                    <Stack direction="horizontal" gap={3}>
+                        {children}
+                    </Stack>
                 </Offcanvas.Body>
             </Offcanvas>
         </>

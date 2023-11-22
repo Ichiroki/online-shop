@@ -1,14 +1,13 @@
-import { FormEvent } from "react"
+import { FormEvent, useState } from "react"
 
 function Signup() {
+   const [name, setName] = useState('')
+   const [email, setEmail] = useState('')
+   const [password, setPassword] = useState('')
+   const [confPassword, setConfPassword] = useState('')
+
    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-
-      const target = e.target as HTMLFormElement
-      const name = target.name.value
-      const email = target.email.value
-      const password = target.password.value
-      const confPassword = target.confPassword.value
       
       try {
          await fetch("/signup", {
@@ -43,23 +42,23 @@ function Signup() {
                      <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                            <label htmlFor="name" className="form-label">Name</label>
-                           <input type="text" name="name" className="form-control" id="name"/>
+                           <input type="text" name="name" className="form-control" id="name" onChange={(e) => setName(e.target.value)} value={name}/>
                         </div>
                         <div className="mb-3">
                            <label htmlFor="email" className="form-label">Email address</label>
-                           <input type="email" name="email" className="form-control" id="email"/>
+                           <input type="email" name="email" className="form-control" id="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
                         </div>
                         <div className="row">
                            <div className="col-md-6">
                               <div className="mb-3">
                                  <label htmlFor="password" className="form-label">Password</label>
-                                 <input type="password" name="password" className="form-control" id="password"/>
+                                 <input type="password" name="password" className="form-control" id="password" onChange={(e) => setPassword(e.target.value)} value={password}/>
                               </div>
                            </div>
                            <div className="col-md-6">
                               <div className="mb-3">
                                  <label htmlFor="confPassword" className="form-label">Confirm Password</label>
-                                 <input type="password" name="confPassword" className="form-control" id="confPassword"/>
+                                 <input type="password" name="confPassword" className="form-control" id="confPassword" onChange={(e) => setConfPassword(e.target.value)} value={confPassword}/>
                               </div>
                            </div>
                         </div>

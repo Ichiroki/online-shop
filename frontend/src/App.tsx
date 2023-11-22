@@ -3,7 +3,6 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import About from "./pages/About";
-// import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import { Container } from "react-bootstrap";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
