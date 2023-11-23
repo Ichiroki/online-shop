@@ -1,0 +1,83 @@
+import axios from "axios";
+import { Container, Nav, NavDropdown, Navbar as NavbarBs } from "react-bootstrap";
+import Navbar from 'react-bootstrap/Navbar';
+import { NavLink } from "react-router-dom";
+import { useCart } from "../store/ShoppingCartStore";
+import { useNavigate } from 'react-router-dom'
+import CartOffcanvas from "./CartOffcanvas";
+
+function TopNavbar() {
+  const { carts } = useCart()
+  const users = localStorage.getItem('authenticated')
+  // const users = 
+  const parsedUsers = JSON.parse(users)
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      await axios.get('/logout')
+      localStorage.removeItem('authenticated')
+      window.location.href = "/login"
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  return (
+    <>
+      <NavbarBs sticky='top' className='mb-3 bg-white shadow-sm'>
+        <Container>
+          <Nav className='me-auto'>
+            <Nav.Link to='/' as={NavLink}>
+              Home
+            </Nav.Link>
+            <Nav.Link to='/menu' as={NavLink}>
+              Menu
+            </Nav.Link>
+            <Nav.Link to='/about' as={NavLink}>
+              About
+            </Nav.Link>
+          </Nav>
+          <Nav>
+            {users ? 
+              <>
+                <Navbar.Collapse id="navbar-dark-example">
+                  <Nav>
+                    <NavDropdown
+                      id="nav-dropdown-dark-example"
+                      title={parsedUsers.name}
+                      menuVariant="dark"
+                    >
+                      <NavDropdown.Item href="#action/3.1">Dashboard</NavDropdown.Item>
+                      <NavDropdown.Item href="#action/3.2">
+                        Setting
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href="#action/3.3">Wishlist</NavDropdown.Item>
+                      <NavDropdown.Divider />
+                      <NavDropdown.Item onClick={handleLogout}>
+                        Log Out
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </Nav>
+                </Navbar.Collapse>
+                <CartOffcanvas cart={carts}></CartOffcanvas>
+              </>
+            : 
+              <>
+                <Nav.Link to='/login' as={NavLink}>
+                  Login
+                </Nav.Link>
+                <Nav.Link to='/signup' as={NavLink}>
+                  Sign Up
+                </Nav.Link>
+              </>
+            }
+            
+
+          </Nav>
+        </Container>
+      </NavbarBs>
+    </>
+  )
+}
+export default TopNavbar

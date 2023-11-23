@@ -1,26 +1,26 @@
 [
-   {
-      "id" : "3dd06ca6-b8d3-4833-9800-a884453a41c5",
-      "name" : "Mocha Latte",
-      "desc": "Mocha Latte that can bring back your mood",
-      "price" : 25000
-   },
-   {
-      "id" : "55210cc2-9fbe-4322-ba98-e650af4723ad",
-      "name" : "Ice Tea",
-      "desc": "Ice Tea that can bring back your mood",
-      "price" : 10000
-   },
-   {
-      "id" : "acc90fb0-f782-488f-903e-098694aa1547",
-      "name" : "Ice Cappuchino Coffee",
-      "desc": "Ice Cappuchino Coffee that can bring back your mood",
-      "price" : 15000
-   },
-   {
-      "id" : "f91f1153-9820-4af4-bd26-71eff2429b09",
-      "name" : "Ice White Coffee",
-      "desc": "Ice White Coffee that can bring back your mood",
-      "price" : 15000
-   }
+  {
+    "id": "3dd06ca6-b8d3-4833-9800-a884453a41c5",
+    "name": "Mocha Latte",
+    "desc": "Mocha Latte that can bring back your mood",
+    "price": 25000
+  },
+  {
+    "id": "55210cc2-9fbe-4322-ba98-e650af4723ad",
+    "name": "Ice Tea",
+    "desc": "Ice Tea that can bring back your mood",
+    "price": 10000
+  },
+  {
+    "id": "acc90fb0-f782-488f-903e-098694aa1547",
+    "name": "Ice Cappuchino Coffee",
+    "desc": "Ice Cappuchino Coffee that can bring back your mood",
+    "price": 15000
+  },
+  {
+    "id": "f91f1153-9820-4af4-bd26-71eff2429b09",
+    "name": "Ice White Coffee",
+    "desc": "Ice White Coffee that can bring back your mood",
+    "price": 15000
+  }
 ]

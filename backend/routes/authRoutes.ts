@@ -1,10 +1,10 @@
 import cors from 'cors';
+import csurf from 'csurf';
 import { Router } from 'express';
-import { addToCart, cartGet, deleteFromCart } from '../app/controllers/addToCartController';
+import addToCartController, { addToCart, deleteFromCart } from '../app/controllers/addToCartController';
 import authController from '../app/controllers/authController';
 import menuController from '../app/controllers/menuController';
 import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
-import csurf from 'csurf'
 
 const router: Router = Router();
 const csrfProtection = csurf({cookie: true})
@@ -29,7 +29,7 @@ router.get('/logout', authController.logout_get)
 // Menu
 router.get('/menu', requireAuth, menuController.menuGet)
 
-router.get('/cart', cartGet)
+
 router.post('/add-to-cart', requireAuth, async(req, res) => {
    try {
       const { userId, productId, quantity } = req.body
@@ -51,6 +51,7 @@ router.post('/delete-to-cart', requireAuth, async(req, res) => {
 
 // For API
 router.get('/api/menu', menuController.menuGetAPI)
+router.get('/api/cart', addToCartController.cartGet)
 
 
 export default router;

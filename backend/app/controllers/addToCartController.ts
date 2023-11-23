@@ -10,17 +10,17 @@ export const cartGet = async(req, res) => {
         if(userData && userData.id) {
             const carts = await prisma.cart.findMany({
                 where: {
-                    userId: res.locals.authenticated.id
+                    userId: userData.id
+                },
+                include: {
+                    products: true,
+                    users: true
                 }
             })
-            const cartsStringified = carts.map(cart => ({
-                ...cart,
-                id: cart.id.toString()
-            }))
-
-            res.status(201).json(cartsStringified);
+            console.log(carts)
+            return res.status(201).json(carts);
         } else {
-            res.status(404).json({message: "There is not authenticated user"})
+            return res.status(404).json({message: "There is not authenticated user"})
         }
     } catch (e) {
         console.log(e)
@@ -94,3 +94,5 @@ export const deleteFromCart = async (userId: string, productId: string, quantity
         console.log('Internal server error, please wait', e)
     }
 }
+
+export default { cartGet }

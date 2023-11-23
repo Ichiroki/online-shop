@@ -1,23 +1,23 @@
-import { atom, useRecoilState } from 'recoil';
-import axios from 'axios';
+import { atom, useRecoilState } from "recoil"
+import axios from "axios"
 
 interface MenuItem {
-  id: number;
-  name: string;
-  desc: string;
-  price: number;
-  image: string;
-  available: number;
+  id: number
+  name: string
+  desc: string
+  price: number
+  image: string
+  available: number
 }
 
 export const menuState = atom<MenuItem[]>({
-  key: 'menuState',
+  key: "menuState",
   default: [],
-});
+})
 
-export const loadingState = atom({
-  key: 'loading',
-  default: true
+const loadingState = atom({
+  key: "loading",
+  default: true,
 })
 
 export function useMenu() {
@@ -27,14 +27,14 @@ export function useMenu() {
   const fetchMenu = async () => {
     setLoading(true)
     try {
-      const response = await axios.get('http://localhost:3000/api/menu');
+      const response = await axios.get("/api/menu")
       setMenu(response.data)
       setLoading(false)
     } catch (error) {
       console.log(error)
       setLoading(true)
     }
-  };
+  }
 
-  return { menu, fetchMenu, loading };
+  return { menu, fetchMenu, loading }
 }

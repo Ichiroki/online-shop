@@ -1,9 +1,9 @@
 function About() {
-   return (
-      <>
-         <h1>About</h1>
-      </>
-   );
+  return (
+    <>
+      <h1>About</h1>
+    </>
+  )
 }
 
-export default About;
+export default About

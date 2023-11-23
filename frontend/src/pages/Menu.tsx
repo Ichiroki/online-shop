@@ -14,7 +14,7 @@ function Menu() {
   return (
     <>
       <h1>Menu</h1>
-      {menus.state === 'hasValue' && <MenuList/>}
+      {menus.state === "hasValue" && <MenuList />}
     </>
   )
 }
