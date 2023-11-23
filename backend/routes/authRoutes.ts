@@ -41,8 +41,8 @@ router.post('/add-to-cart', requireAuth, async(req, res) => {
 })
 router.post('/delete-to-cart', requireAuth, async(req, res) => {
    try {
-      const { userId, productId, quantity } = req.body
-      const deleteMenuFromCart = await deleteFromCart(userId, productId, quantity)
+      const { userId, productId } = req.body
+      const deleteMenuFromCart = await deleteFromCart(userId, productId)
       return deleteMenuFromCart
    } catch(e) {
       console.log(e)

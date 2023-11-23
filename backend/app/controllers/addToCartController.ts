@@ -17,7 +17,6 @@ export const cartGet = async(req, res) => {
                     users: true
                 }
             })
-            console.log(carts)
             return res.status(201).json(carts);
         } else {
             return res.status(404).json({message: "There is not authenticated user"})
@@ -61,7 +60,7 @@ export const addToCart = async (userId: string, productId: string, quantity: num
     }
 }
 
-export const deleteFromCart = async (userId: string, productId: string, quantity: number) => {
+export const deleteFromCart = async (userId: string, productId: string) => {
     try {
         const existingCartItem = await prisma.cart.findFirst({
             where: {

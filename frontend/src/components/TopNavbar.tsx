@@ -1,17 +1,12 @@
 import axios from "axios";
 import { Container, Nav, NavDropdown, Navbar as NavbarBs } from "react-bootstrap";
-import Navbar from 'react-bootstrap/Navbar';
 import { NavLink } from "react-router-dom";
 import { useCart } from "../store/ShoppingCartStore";
-import { useNavigate } from 'react-router-dom'
 import CartOffcanvas from "./CartOffcanvas";
 
 function TopNavbar() {
-  const { carts } = useCart()
   const users = localStorage.getItem('authenticated')
-  // const users = 
-  const parsedUsers = JSON.parse(users)
-  const navigate = useNavigate()
+  const user = users ? JSON.parse(users) : null
 
   const handleLogout = async () => {
     try {
@@ -22,10 +17,9 @@ function TopNavbar() {
       console.log(e)
     }
   }
-
   return (
     <>
-      <NavbarBs sticky='top' className='mb-3 bg-white shadow-sm'>
+      <NavbarBs sticky='top' className='mb-3 shadow-sm' bg="primary" data-bs-theme="dark">
         <Container>
           <Nav className='me-auto'>
             <Nav.Link to='/' as={NavLink}>
@@ -39,28 +33,26 @@ function TopNavbar() {
             </Nav.Link>
           </Nav>
           <Nav>
-            {users ? 
+            {user ? 
               <>
-                <Navbar.Collapse id="navbar-dark-example">
-                  <Nav>
-                    <NavDropdown
-                      id="nav-dropdown-dark-example"
-                      title={parsedUsers.name}
-                      menuVariant="dark"
-                    >
-                      <NavDropdown.Item href="#action/3.1">Dashboard</NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.2">
-                        Setting
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.3">Wishlist</NavDropdown.Item>
-                      <NavDropdown.Divider />
-                      <NavDropdown.Item onClick={handleLogout}>
-                        Log Out
-                      </NavDropdown.Item>
-                    </NavDropdown>
-                  </Nav>
-                </Navbar.Collapse>
-                <CartOffcanvas cart={carts}></CartOffcanvas>
+                <Nav>
+                  <NavDropdown
+                    id="profile-nav"
+                    title={user?.name}
+                    menuVariant="dark"
+                  >
+                    <NavDropdown.Item href="#action/3.1">Dashboard</NavDropdown.Item>
+                    <NavDropdown.Item href="#action/3.2">
+                      Setting
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="#action/3.3">Wishlist</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item onClick={handleLogout}>
+                      Log Out
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </Nav>
+                <CartOffcanvas></CartOffcanvas>
               </>
             : 
               <>
