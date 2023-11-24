@@ -1,7 +1,7 @@
 import axios from "axios"
-import { useState } from "react"
-import { useRecoilState } from "recoil"
 import cryptoRandomString from "crypto-random-string"
+import { useState } from "react"
+import { Nav, Stack } from "react-bootstrap"
 
 function Login() {
   const [email, setEmail] = useState("")
@@ -14,23 +14,29 @@ function Login() {
     e.preventDefault()
 
     try {
-      const response = await axios.post('/login', {
-        email, password, csrfToken
-      }, {
-        withCredentials: true
-      })
+      const response = await axios.post(
+        "/login",
+        {
+          email,
+          password,
+          csrfToken,
+        },
+        {
+          withCredentials: true,
+        },
+      )
       const parsedData = JSON.stringify(response.data.user)
       console.log(parsedData)
-      localStorage.setItem('authenticated', parsedData)
-      window.location.href = '/'
-    } catch(e) {
+      localStorage.setItem("authenticated", parsedData)
+      window.location.href = "/"
+    } catch (e) {
       console.log("Internal server error, please wait " + e)
     }
   }
 
   return (
     <>
-      <div className='row'>
+      <div className='row h-100 d-flex align-items-center justify-content-center'>
         <div className='mx-auto mt-3 col-md-6'>
           <div className='mb-3 card'>
             <div className='shadow card-body'>
@@ -72,9 +78,15 @@ function Login() {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
-                  <button type='submit' className='btn btn-success'>
-                    Login
-                  </button>
+                  <Stack gap={3} direction='horizontal'>
+                    <button type='submit' className='btn btn-success'>
+                      Login
+                    </button>
+                    <p className='ms-auto'>
+                      Doesn't have an account ?
+                      <Nav.Link href='/signup'>Signup</Nav.Link>
+                    </p>
+                  </Stack>
                 </form>
               </div>
             </div>

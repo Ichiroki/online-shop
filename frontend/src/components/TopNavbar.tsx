@@ -1,25 +1,33 @@
-import axios from "axios";
-import { Container, Nav, NavDropdown, Navbar as NavbarBs } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
-import { useCart } from "../store/ShoppingCartStore";
-import CartOffcanvas from "./CartOffcanvas";
+import axios from "axios"
+import {
+  Container,
+  Nav,
+  NavDropdown,
+  Navbar as NavbarBs,
+} from "react-bootstrap"
+import { NavLink } from "react-router-dom"
+import CartOffcanvas from "./CartOffcanvas"
 
 function TopNavbar() {
-  const users = localStorage.getItem('authenticated')
+  const users = localStorage.getItem("authenticated")
   const user = users ? JSON.parse(users) : null
 
   const handleLogout = async () => {
     try {
-      await axios.get('/logout')
-      localStorage.removeItem('authenticated')
-      window.location.href = "/login"
+      await axios.get("/logout")
+      localStorage.removeItem("authenticated")
+      window.location.href = "/"
     } catch (e) {
       console.log(e)
     }
   }
   return (
     <>
-      <NavbarBs sticky='top' className='mb-3 shadow-sm' bg="primary" data-bs-theme="dark">
+      <NavbarBs
+        sticky='top'
+        className='mb-3 shadow-sm'
+        bg='primary'
+        data-bs-theme='dark'>
         <Container>
           <Nav className='me-auto'>
             <Nav.Link to='/' as={NavLink}>
@@ -33,19 +41,23 @@ function TopNavbar() {
             </Nav.Link>
           </Nav>
           <Nav>
-            {user ? 
+            {user ? (
               <>
                 <Nav>
                   <NavDropdown
-                    id="profile-nav"
+                    id='profile-nav'
                     title={user?.name}
-                    menuVariant="dark"
-                  >
-                    <NavDropdown.Item href="#action/3.1">Dashboard</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">
+                    menuVariant='dark'
+                    data-bs-theme='light'>
+                    <NavDropdown.Item href='#action/3.1'>
+                      Dashboard
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href='#action/3.2'>
                       Setting
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">Wishlist</NavDropdown.Item>
+                    <NavDropdown.Item href='#action/3.3'>
+                      Wishlist
+                    </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={handleLogout}>
                       Log Out
@@ -54,7 +66,7 @@ function TopNavbar() {
                 </Nav>
                 <CartOffcanvas></CartOffcanvas>
               </>
-            : 
+            ) : (
               <>
                 <Nav.Link to='/login' as={NavLink}>
                   Login
@@ -63,9 +75,7 @@ function TopNavbar() {
                   Sign Up
                 </Nav.Link>
               </>
-            }
-            
-
+            )}
           </Nav>
         </Container>
       </NavbarBs>

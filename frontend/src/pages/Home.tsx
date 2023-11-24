@@ -1,7 +1,13 @@
+import { Container } from "react-bootstrap"
+import TopNavbar from "../components/TopNavbar"
+
 function Home() {
   return (
     <>
-      <h1>Home</h1>
+      <TopNavbar />
+      <Container>
+        <h1>Home</h1>
+      </Container>
     </>
   )
 }

@@ -1,12 +1,14 @@
 import { atom, useRecoilState } from "recoil"
 import axios from "axios"
+import { useEffect } from "react"
 
 interface MenuItem {
-  id: number
+  id: string
   name: string
   desc: string
   price: number
   image: string
+  quantity: number
   available: number
 }
 
@@ -23,7 +25,7 @@ const loadingState = atom({
 export function useMenu() {
   const [menu, setMenu] = useRecoilState(menuState)
   const [loading, setLoading] = useRecoilState(loadingState)
-
+  
   const fetchMenu = async () => {
     setLoading(true)
     try {
@@ -35,6 +37,10 @@ export function useMenu() {
       setLoading(true)
     }
   }
+
+  useEffect(() => {
+    fetchMenu()
+  }, [])
 
   return { menu, fetchMenu, loading }
 }

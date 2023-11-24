@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react"
+import { Nav, Stack } from "react-bootstrap"
 
 function Signup() {
   const [name, setName] = useState("")
@@ -100,9 +101,15 @@ function Signup() {
                       </div>
                     </div>
                   </div>
-                  <button type='submit' className='btn btn-success'>
-                    Submit
-                  </button>
+                  <Stack gap={3} direction='horizontal'>
+                    <button type='submit' className='btn btn-success'>
+                      Submit
+                    </button>
+                    <p className='ms-auto'>
+                      Already Registered ?
+                      <Nav.Link href='/login'>Login</Nav.Link>
+                    </p>
+                  </Stack>
                 </form>
               </div>
             </div>
