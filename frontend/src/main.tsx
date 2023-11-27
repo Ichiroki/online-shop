@@ -1,16 +1,20 @@
+import axios from "axios"
+import "bootstrap/dist/css/bootstrap.min.css"
 import React from "react"
 import ReactDOM from "react-dom/client"
-import App from "./App"
-import "bootstrap/dist/css/bootstrap.min.css"
 import { BrowserRouter } from "react-router-dom"
-import { AuthProvider } from "./context/AuthContext"
+import App from "./App"
+import { RecoilRoot } from "recoil"
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+axios.defaults.baseURL = "http://localhost:3000"
+axios.defaults.withCredentials = true
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthProvider>
+      <RecoilRoot>
         <App />
-      </AuthProvider>
+      </RecoilRoot>
     </BrowserRouter>
   </React.StrictMode>,
 )

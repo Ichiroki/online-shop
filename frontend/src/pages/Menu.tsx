@@ -1,30 +1,26 @@
-import { Col, Row } from "react-bootstrap"
-import { StoreItem } from "../components/StoreItem"
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { useRecoilValueLoadable } from "recoil"
+import MenuList from "../components/MenuList"
+// import { menuState, useMenu } from "../store/MenuStore"
+import { useEffect } from "react"
+import TopNavbar from "../components/TopNavbar"
+import { Container } from "react-bootstrap"
 
 function Menu() {
-  const [menus, setMenus] = useState<any[]>([])
+  // const menus = useRecoilValueLoadable(menuState)
+  // const { fetchMenu } = useMenu()
 
-  const getMenus = async () => {
-    const response = await axios.get('http://localhost:3000/api/menu')
-    setMenus(response.data)
-  }
-
-  useEffect(() => {
-    getMenus()
-  }, [])
+  // useEffect(() => {
+  //   fetchMenu()
+  // }, [])
 
   return (
     <>
-      <h1>Menu</h1>
-      <Row md={2} xs={1} lg={4} className="g-3">
-        {menus.map(menu => (
-          <Col key={menu.id}>
-            <StoreItem name={menu.name} id={menu.id} price={menu.price} desc={menu.desc}/>
-          </Col>
-        ))}
-      </Row>
+      <TopNavbar />
+      <Container className='mb-4'>
+        <h1>Menu</h1>
+        {/* {menus.state === "hasValue" && } */}
+        <MenuList />
+      </Container>
     </>
   )
 }
