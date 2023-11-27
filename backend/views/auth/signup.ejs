@@ -14,6 +14,7 @@
   <div class="form">
     <form action="/signup" method="POST" novalidate>
       <h2>Sign up</h2>
+      <input type="hidden" name="_csrf" value="<%= token %>" readonly/>
       <label for="name">Name</label>
       <input type="text" name="name" required autofocus/>
       <div class="name error"></div>
@@ -47,6 +48,8 @@
   const nameError = document.querySelector('.name.error');
   const emailError = document.querySelector('.email.error');
   const passwordError = document.querySelector('.password.error');
+  const csrfToken = document.querySelector('._csrf')
+
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
@@ -61,6 +64,7 @@
     const email = form.email.value
     const password = form.password.value
     const confPassword = form.confPassword.value
+    const csrfToken = form._csrf.value
 
     try {
       const res = await fetch('/signup', {
@@ -68,7 +72,7 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({name, email, password, confPassword})
+        body: JSON.stringify({name, email, password, confPassword, csrfToken})
       })
       const data = await res.json()
 

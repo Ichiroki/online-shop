@@ -8,7 +8,7 @@ datasource db {
 }
 
 model cart {
-  id        BigInt   @id @default(autoincrement())
+  id        Int   @id @default(autoincrement())
   userId    String
   productId String
   quantity  Int
