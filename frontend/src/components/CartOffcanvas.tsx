@@ -1,63 +1,16 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { Button, Col, Offcanvas, Row, Stack } from "react-bootstrap"
-import { cartState, useCart } from "../store/ShoppingCartStore"
-import { useRecoilState } from "recoil"
-import formatCurrency from "../utilities/formatCurrency"
+import { useState } from "react"
+import { Button, Offcanvas, Stack } from "react-bootstrap"
+import useCart from "../function/CartFunction"
+import MenuInCart from "./MenuInCart"
 
-type ProductsType = {
-  id: string
-  name: string
-  price: number
-  image: string
-}
-
-type UsersType = {
-  id: string
-  name: string
-  email: string
-}
-
-type CartsType = {
-  id: number
-  quantity: number
-  products: ProductsType
-  users: UsersType
-}
 
 function CartOffcanvas() {
   const [show, setShow] = useState(false)
 
+  const { carts } = useCart()
+
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-
-  const [carts, setCarts] = useState<CartsType[]>([])
-  const [quantity, setQuantity] = useState<number>(0)
-  const [totalPrice, setTotalPrice] = useState<number>(0)
-
-  const { addToCart, deleteFromCart } = useCart()
-
-  const calculateTotalPrice = () => {
-    return carts.reduce((total, c) => total + c.products.price * c.quantity, 0)
-  }
-
-  const getCartsData = async () => {
-    try {
-      const response = await axios.get("/api/cart")
-      setCarts(response.data)
-      setQuantity(response.data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    getCartsData()
-  }, [])
-
-  useEffect(() => {
-    setTotalPrice(calculateTotalPrice())
-  }, [carts])
 
   return (
     <>
@@ -84,57 +37,13 @@ function CartOffcanvas() {
           <Offcanvas.Title>Your Cart</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <Stack direction='vertical' gap={3}>
+          <Stack direction="vertical" gap={3}>
             {carts && carts.length > 0 ? (
               <>
-                {carts.map((c) => (
-                  <Row key={c.id}>
-                    <Col md={4}>
-                      <img src={`public/imgs/${c.products.image}`} width='105' />
-                    </Col>
-                    <Col md={4}>
-                      <p style={{ fontSize: ".9rem", marginBottom: ".3rem" }}>
-                        {c.products.name}
-                      </p>
-                      <p style={{ fontSize: ".9rem", marginBottom: ".3rem" }}>
-                        {c.quantity} x
-                      </p>
-                      <p style={{ fontSize: ".9rem", marginBottom: ".3rem" }}>
-                        {c.products.price * c.quantity}
-                      </p>
-                    </Col>
-                    <Col md={4} gap={2}>
-                      <Button
-                        type='button'
-                        variant='danger'
-                        style={{ marginLeft: ".5rem" }}
-                        onClick={() => deleteFromCart(c.users.id, c.products.id)}
-                        title={`Decrease ${c.products.name} in ${c.users.name}'\s quantity`}>
-                        -
-                      </Button>
-                      <Button
-                        type='button'
-                        variant='success'
-                        style={{ marginLeft: ".5rem" }}
-                        onClick={() => addToCart(c.users.id, c.products.id, c.quantity)}
-                        title={`Increase ${c.products.name} in ${c.users.name}'\s quantity`}>
-                        +
-                      </Button>
-                    </Col>
-                  </Row>
-                ))}
-                <hr />
-                <Stack>
-                  <Row style={{ fontSize: "1.4rem" }}>
-                    <Col md={9}>Total : {formatCurrency(totalPrice)}</Col>
-                    <Col md={2}>
-                      <Button variant='primary'>Order</Button>
-                    </Col>
-                  </Row>
-                </Stack>
+                <MenuInCart menu={carts}/>
               </>
             ) : (
-              <p>Your cart is empty</p>
+              <p>There's no item in you cart</p>
             )}
           </Stack>
         </Offcanvas.Body>

@@ -7,6 +7,7 @@ import {
 } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
 import CartOffcanvas from "./CartOffcanvas"
+import useCart from "../function/CartFunction"
 
 function TopNavbar() {
   const users = localStorage.getItem("authenticated")
@@ -21,6 +22,9 @@ function TopNavbar() {
       console.log(e)
     }
   }
+
+  const {carts} = useCart()
+
   return (
     <>
       <NavbarBs
@@ -64,7 +68,9 @@ function TopNavbar() {
                     </NavDropdown.Item>
                   </NavDropdown>
                 </Nav>
+                {carts.length > 0 && (
                 <CartOffcanvas></CartOffcanvas>
+                )}
               </>
             ) : (
               <>

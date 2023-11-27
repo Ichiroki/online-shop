@@ -39,7 +39,7 @@ router.post('/add-to-cart', requireAuth, async(req, res) => {
       console.log(e)
    }
 })
-router.post('/delete-to-cart', requireAuth, async(req, res) => {
+router.post('/delete-from-cart', requireAuth, async(req, res) => {
    try {
       const { userId, productId } = req.body
       const deleteMenuFromCart = await deleteFromCart(userId, productId)
@@ -50,7 +50,7 @@ router.post('/delete-to-cart', requireAuth, async(req, res) => {
 })
 
 // For API
-router.get('/api/menu', menuController.menuGetAPI)
+router.get('/api/menu', checkUser, menuController.menuGetAPI)
 router.get('/api/cart', addToCartController.cartGet)
 
 
