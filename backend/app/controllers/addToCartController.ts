@@ -2,6 +2,30 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
 
+export const cartGet = async(req, res) => {
+
+    const userData = res.locals.authenticated
+
+    try {
+        if(userData && userData.id) {
+            const carts = await prisma.cart.findMany({
+                where: {
+                    userId: userData.id
+                },
+                include: {
+                    products: true,
+                    users: true
+                }
+            })
+            return res.status(201).json(carts);
+        } else {
+            return res.status(404).json({message: "There is not authenticated user"})
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 export const addToCart = async (userId: string, productId: string, quantity: number) => {
     try {
         const existingCartItem = await prisma.cart.findUnique({
@@ -36,7 +60,7 @@ export const addToCart = async (userId: string, productId: string, quantity: num
     }
 }
 
-export const deleteFromCart = async (userId: string, productId: string, quantity: number) => {
+export const deleteFromCart = async (userId: string, productId: string) => {
     try {
         const existingCartItem = await prisma.cart.findFirst({
             where: {
@@ -69,3 +93,5 @@ export const deleteFromCart = async (userId: string, productId: string, quantity
         console.log('Internal server error, please wait', e)
     }
 }
+
+export default { cartGet }
