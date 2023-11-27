@@ -1,5 +1,5 @@
 // MenuList.tsx
-import { Button, Card, Col, Row, Spinner } from "react-bootstrap"
+import { Button, Card, Col, Row, Spinner, Stack } from "react-bootstrap"
 import { useRecoilCallback } from "recoil"
 import useCart from "../function/CartFunction"
 import { useMenu } from "../function/MenuFunction"
@@ -22,7 +22,7 @@ function MenuList() {
   const parsedUser = JSON.parse(getAuthUser)
 
   return (
-    <Row md={2} xs={1} lg={4} className='g-3'>
+    <Row md={2} xs={1} lg={3} className='g-3'>
       {loading ? (
         <Spinner animation='grow' variant='primary' className='mx-auto' />
       ) : (
@@ -31,13 +31,22 @@ function MenuList() {
             <Card>
               <Card.Img variant='top' src={`public/imgs/${item.image}`} title={'Menu Image'}/>
               <Card.Body>
-                <Card.Title>{item.name}</Card.Title>
+                <Card.Title>
+                  <Row>
+                    <Col md={8}>
+                      {item.name}
+                    </Col>
+                    <Col md={4}>
+                      {item.price}
+                    </Col>
+                  </Row>
+                  </Card.Title>
                 <Card.Text>{item.desc}</Card.Text>
                 <Button
                   id="addItemToOrder"
                   type="button"
                   variant='primary'
-                  onClick={() => handleAddToCart(parsedUser.id, item.id, item.quantity)}
+                  onClick={() => handleAddToCart(parsedUser.id, item.id, 1)}
                   value="Order"
                   title={`Add new items to auth user cart`}
                   >

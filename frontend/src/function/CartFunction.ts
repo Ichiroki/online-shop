@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { cartState } from "../store/ShoppingCartStore";
-import { CartsType } from "../types/Cart";
+import { AddNewItem, CartsType } from "../types/Cart";
 
 const useCart = () => {
   const [carts, setCarts] = useRecoilState<CartsType[]>(cartState);
@@ -17,38 +17,13 @@ const useCart = () => {
     }
   }
 
-
-  // const addToCart = async (userId: string, productId: string, quantity: number) => {
-  //   try {
-  //     const response = await axios.post("/add-to-cart", {
-  //       userId,
-  //       productId,
-  //       quantity
-  //     });
-
-  //     const newItem = response.data;
-  //     const existingItem = carts.find(item => item.products.id === newItem.products.id);
-
-  //     if (existingItem) {
-  //       const updatedCart = carts.map(item =>
-  //         item.products.id === newItem.products.id ? { ...item, quantity: item.quantity + newItem.quantity } : item
-  //       );
-  //       setCarts(updatedCart);
-  //     } else {
-  //       setCarts([...carts, newItem]);
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
   const addToCart = async (userId: string, productId: string, quantity: number) => {
     try {
       const newItem = { userId, productId, quantity }; // Create the new item object
   
       const existingItem = carts.find(item => item.products.id === newItem.productId);
   
-      if (existingItem) {
+      if (existingItem?.quantity) {
         // If the item already exists in the cart, update the quantity
         const updatedCart = carts.map(item =>
           item.products.id === newItem.productId ? { ...item, quantity: item.quantity + 1 } : item
@@ -58,7 +33,15 @@ const useCart = () => {
         await axios.post('/add-to-cart', newItem)
       } else {
         // If the item is not in the cart, add it to the cart
-        setCarts([...carts, newItem]);
+        const newItem: AddNewItem = { userId, productId, quantity };
+
+        setCarts([...carts, newItem])
+
+        await axios.post('/add-to-cart', {
+          userId,
+          productId,
+          quantity
+        })
       }
     } catch (e) {
       console.log(e);
