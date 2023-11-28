@@ -17,6 +17,10 @@ const useCart = () => {
     }
   }
 
+  useEffect(() => {
+    getCartsData()
+  }, [carts.length])
+
   const addToCart = async (userId: string, productId: string, quantity: number) => {
     try {
       const newItem = { userId, productId, quantity }; // Create the new item object
@@ -51,7 +55,7 @@ const useCart = () => {
   const deleteFromCart = async (userId: string, productId: string) => {
     try {
       const deletedItem = { userId, productId };
-      const existingItem = carts.find(item => item.products.id !== deletedItem.productId);
+      const existingItem = carts.find(item => item.products.id === deletedItem.productId);
 
       if(existingItem) {
         if(existingItem.quantity > 1) {
@@ -80,10 +84,6 @@ const useCart = () => {
   const handleDeleteFromCart = async (userId, productId) => {
     await deleteFromCart(userId, productId);
   };
-
-  useEffect(() => {
-    getCartsData()
-  }, [])
 
   return { carts, handleAddToCart, handleDeleteFromCart };
 };

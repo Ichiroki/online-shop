@@ -1,25 +1,17 @@
-import { useRecoilValueLoadable } from "recoil"
 import MenuList from "../components/MenuList"
 // import { menuState, useMenu } from "../store/MenuStore"
-import { useEffect } from "react"
+import { Button, Col, Container, Form, Row } from "react-bootstrap"
 import TopNavbar from "../components/TopNavbar"
-import { Container } from "react-bootstrap"
+import { useMenu } from "../app/function/MenuFunction"
 
 function Menu() {
-  // const menus = useRecoilValueLoadable(menuState)
-  // const { fetchMenu } = useMenu()
-
-  // useEffect(() => {
-  //   fetchMenu()
-  // }, [])
 
   return (
     <>
       <TopNavbar />
       <Container className='mb-4'>
         <h1>Menu</h1>
-        {/* {menus.state === "hasValue" && } */}
-        <MenuList />
+        <MenuList/>
       </Container>
     </>
   )

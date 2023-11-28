@@ -8,7 +8,7 @@ datasource db {
 }
 
 model cart {
-  id        Int   @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    String
   productId String
   quantity  Int
@@ -24,6 +24,7 @@ model products {
   name      String
   desc      String  @db.VarChar(255)
   price     Decimal @db.Decimal(15, 2)
+  category  String
   image     String?
   available Boolean
   cart      cart[]

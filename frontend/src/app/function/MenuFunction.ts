@@ -1,10 +1,12 @@
+import axios from "axios"
 import { useEffect, useState } from "react"
 import { MenuType } from "../types/Menu"
-import axios from "axios"
 
 export const useMenu = () => {
     const [menus, setMenus] = useState<MenuType[]>([])
     const [loading, setLoading] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchResult, setSearchResult] = useState<MenuType[]>([])
 
     const getMenu = async () => {
         setLoading(true)
@@ -18,9 +20,14 @@ export const useMenu = () => {
         }
       }
     
-      useEffect(() => {
-        getMenu()
-      }, [menus.length])
+    const handleSearch = () => {
+      const results = menus.filter(menu => menu.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      setSearchResult(results)
+    }
 
-      return { menus, loading }
+    useEffect(() => {
+      getMenu()
+    }, [])
+
+    return { menus, loading, searchQuery, searchResult, setSearchQuery, handleSearch }
 }

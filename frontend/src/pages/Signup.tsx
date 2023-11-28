@@ -1,5 +1,7 @@
+import axios from "axios"
 import { FormEvent, useState } from "react"
 import { Nav, Stack } from "react-bootstrap"
+import { ZodError } from "zod"
 
 function Signup() {
   const [name, setName] = useState("")
@@ -7,28 +9,49 @@ function Signup() {
   const [password, setPassword] = useState("")
   const [confPassword, setConfPassword] = useState("")
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const [nameErr, setNameErr] = useState("")
+  const [emailErr, setEmailErr] = useState("")
+  const [passwordErr, setPasswordErr] = useState("")
+  const [confPasswordErr, setConfPasswordErr] = useState("")
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
-      await fetch("/signup", {
-        method: "POST",
-        mode: "cors",
-        body: JSON.stringify({
+      await axios.post(
+        "/signup",
+        {
           name,
           email,
           password,
           confPassword,
-        }),
-        headers: {
-          "Content-Type": "application/json",
         },
-      }).then((data) => {
-        console.log(data)
-        window.location.href = "/login"
-      })
+        {
+          withCredentials: true,
+        },
+      )
+      window.location.href = "/login"
     } catch (e) {
-      console.log(e)
+      if (axios.isAxiosError(e)) {
+        // Jika ini adalah AxiosError, coba lihat responsnya
+        if (e.response) {
+          const nameError = e.response.data.error.fieldErrors.name
+          const emailError = e.response.data.error.fieldErrors.email
+          const passwordError = e.response.data.error.fieldErrors.password
+          const confPasswordError = e.response.data.error.fieldErrors.confPassword
+          
+          setNameErr(nameError)
+          setEmailErr(emailError)
+          setPasswordErr(passwordError)
+          setConfPasswordErr(confPasswordError)
+        } else {
+          console.error("Request failed before getting a response from the server");
+        }
+      } else if (e instanceof ZodError) {
+        console.log("Internal server error, please wait " + e);
+      } else {
+        console.error("Unexpected error occurred:", e);
+      }
     }
   }
 
@@ -55,6 +78,9 @@ function Signup() {
                       onChange={(e) => setName(e.target.value)}
                       value={name}
                     />
+                    {nameErr && (
+                      <p className="text-danger">{nameErr}</p>
+                    )}
                   </div>
                   <div className='mb-3'>
                     <label htmlFor='email' className='form-label'>
@@ -68,6 +94,9 @@ function Signup() {
                       onChange={(e) => setEmail(e.target.value)}
                       value={email}
                     />
+                    {emailErr && (
+                      <p className="text-danger">{emailErr}</p>
+                    )}
                   </div>
                   <div className='row'>
                     <div className='col-md-6'>
@@ -83,6 +112,9 @@ function Signup() {
                           onChange={(e) => setPassword(e.target.value)}
                           value={password}
                         />
+                        {passwordErr && (
+                          <p className="text-danger">{passwordErr}</p>
+                        )}
                       </div>
                     </div>
                     <div className='col-md-6'>
@@ -98,6 +130,9 @@ function Signup() {
                           onChange={(e) => setConfPassword(e.target.value)}
                           value={confPassword}
                         />
+                        {confPasswordErr && (
+                          <p className="text-danger">{confPasswordErr}</p>
+                        )}
                       </div>
                     </div>
                   </div>

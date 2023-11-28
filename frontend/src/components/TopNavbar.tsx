@@ -6,17 +6,20 @@ import {
   Navbar as NavbarBs,
 } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import useCart from "../app/function/CartFunction"
+import { authenticatedUserState } from "../app/store/AuthStore"
 import CartOffcanvas from "./CartOffcanvas"
-import useCart from "../function/CartFunction"
 
 function TopNavbar() {
-  const users = localStorage.getItem("authenticated")
-  const user = users ? JSON.parse(users) : null
+  const users = useRecoilValue(authenticatedUserState)
+  const loggedIn = useSetRecoilState(authenticatedUserState)
 
   const handleLogout = async () => {
     try {
       await axios.get("/logout")
       localStorage.removeItem("authenticated")
+      loggedIn(null)
       window.location.href = "/"
     } catch (e) {
       console.log(e)
@@ -45,12 +48,12 @@ function TopNavbar() {
             </Nav.Link>
           </Nav>
           <Nav>
-            {user ? (
+            {users ? (
               <>
                 <Nav>
                   <NavDropdown
                     id='profile-nav'
-                    title={user?.name}
+                    title={users?.name}
                     menuVariant='dark'
                     data-bs-theme='light'>
                     <NavDropdown.Item href='#action/3.1'>

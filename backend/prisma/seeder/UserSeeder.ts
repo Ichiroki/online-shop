@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcrypt"
-import crypto from 'crypto'
 
 const prisma = new PrismaClient()
 
@@ -31,24 +30,63 @@ async function run() {
             id: 'acc90fb0-f782-488f-903e-098694aa1547',
             name: 'Ice Cappucino Coffee',
             desc: 'Cappucino coffee that can bring back your mood',
-            price: 15000,
+            price: 8000,
             image: 'iceCappucinoCoffee.png',
+            category: 'drink',
             available: true,
          },
          {
             id: '3dd06ca6-b8d3-4833-9800-a884453a41c5',
             name: 'Mocha Latte',
             desc: 'Mocha Latte that can bring back your mood',
-            price: 25000,
+            price: 8000,
             image: 'mochaLatte.jpg',
+            category: 'drink',
+            available: true,
+         },
+         {
+            id: '302dd14f-5893-469b-8127-890c7035642f',
+            name: 'Black Coffee',
+            desc: 'Black Coffee that can bring back your mood',
+            price: 7000,
+            image: 'blackCoffee.png',
+            category: 'drink',
+            available: true,
+         },
+         {
+            id: 'a6d251f7-a892-489c-b679-bc7928643d79',
+            name: 'Ice Tea',
+            desc: 'Ice Tea that can bring back your mood',
+            price: 5000,
+            image: 'iceTea.jpg',
+            category: 'drink',
             available: true,
          },
          {
             id: 'd54c606e-2246-4916-87a6-587fc9ac937b',
-            name: 'Black Coffe',
-            desc: 'Black Coffee that can bring back your mood',
+            name: 'Matcha Tea',
+            desc: 'Matcha Tea that can bring back your mood',
+            price: 6000,
+            image: 'matchaTea.png',
+            category: 'drink',
+            available: true,
+         },
+         {
+            id: '06c5cc3d-e182-4f0c-bf4c-7eaad184bbb4',
+            name: 'Donut',
+            desc: 'A circle donut with caramel',
+            price: 5000,
+            image: 'donut.jpg',
+            category: 'food',
+            available: true,
+         },
+         {
+            id: '02a67dbb-e77c-4b2b-bc77-6e0251b10a7f',
+            name: 'Brownies',
+            desc: 'Black choco brownies can melt in your mouth',
             price: 10000,
-            image: 'blackCoffee.png',
+            image: 'brownies.jpg',
+            category: 'food',
             available: true,
          },
       ]

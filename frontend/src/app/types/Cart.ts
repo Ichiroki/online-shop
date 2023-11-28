@@ -2,6 +2,7 @@ import { MenuType, MenuTypeInCart } from "./Menu"
 import { UsersType } from "./User"
 
 export type CartsType = {
+    id: number
     quantity: number
     products: MenuTypeInCart
     users: UsersType

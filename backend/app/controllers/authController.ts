@@ -44,7 +44,6 @@ export const signup_post = async (req, res) => {
     const dataUser = await RegisterUser.parseAsync(req.body)
 
     let hashedPassword = await hashPassword(dataUser.password)
-    console.log(dataUser);
 
     let user = await prisma.users.create({
       data: {
