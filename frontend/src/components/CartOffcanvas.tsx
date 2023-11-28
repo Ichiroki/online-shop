@@ -5,7 +5,6 @@ import MenuInCart from "./MenuInCart"
 
 function CartOffcanvas() {
 
-
   const [show, setShow] = useState(false)
 
   const { carts } = useCart()

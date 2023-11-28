@@ -61,7 +61,7 @@ function MenuInCart({menu}) {
             <hr />
             <Stack>
                 <Row style={{ fontSize: "1.4rem" }}>
-                <Col md={9}>Total : {formatCurrency(total)}</Col>
+                <Col md={9}>Total : {isNaN(total) ? "Invalid Total" : formatCurrency(total)}</Col>
                 <Col md={2}>
                     <Button variant='primary'>Order</Button>
                 </Col>

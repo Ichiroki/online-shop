@@ -40,12 +40,8 @@ const useCart = () => {
         const newItem: AddNewItem = { userId, productId, quantity };
 
         setCarts([...carts, newItem])
-
-        await axios.post('/add-to-cart', {
-          userId,
-          productId,
-          quantity
-        })
+        
+        await axios.post('/add-to-cart', newItem)
       }
     } catch (e) {
       console.log(e);

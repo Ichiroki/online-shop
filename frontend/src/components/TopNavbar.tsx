@@ -18,8 +18,8 @@ function TopNavbar() {
   const handleLogout = async () => {
     try {
       await axios.get("/logout")
-      localStorage.removeItem("authenticated")
       loggedIn(null)
+      localStorage.removeItem("authenticated")
       window.location.href = "/"
     } catch (e) {
       console.log(e)
