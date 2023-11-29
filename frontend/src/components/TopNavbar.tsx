@@ -3,6 +3,7 @@ import {
   Container,
   Nav,
   NavDropdown,
+  Navbar,
   Navbar as NavbarBs,
 } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
@@ -36,6 +37,7 @@ function TopNavbar() {
         bg='primary'
         data-bs-theme='dark'>
         <Container>
+          <Navbar.Brand>Ichiroki</Navbar.Brand>
           <Nav className='me-auto'>
             <Nav.Link to='/' as={NavLink}>
               Home
@@ -50,7 +52,7 @@ function TopNavbar() {
           <Nav>
             {users ? (
               <>
-                <Nav>
+                <Nav className="me-2">
                   <NavDropdown
                     id='profile-nav'
                     title={users?.name}

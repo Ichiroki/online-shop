@@ -1,17 +1,32 @@
+import { Container, Stack } from "react-bootstrap"
 import MenuList from "../components/MenuList"
-// import { menuState, useMenu } from "../store/MenuStore"
-import { Button, Col, Container, Form, Row } from "react-bootstrap"
 import TopNavbar from "../components/TopNavbar"
-import { useMenu } from "../app/function/MenuFunction"
+import { useRecoilState } from "recoil"
+import { menuSearchState } from "../app/store/MenuSearchStore"
+import { Form } from "react-bootstrap"
 
 function Menu() {
+
+  const [searchTerm, setSearchTerm] = useRecoilState(menuSearchState)
 
   return (
     <>
       <TopNavbar />
       <Container className='mb-4'>
-        <h1>Menu</h1>
-        <MenuList/>
+        <Stack direction="horizontal" >
+          <h1>Menu</h1>
+          <Form className="ms-auto">
+            <Form.Group>
+              <Form.Control 
+                type="text"
+                placeholder="Search Menu"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Stack>
+        <MenuList searchTerm={searchTerm}/>
       </Container>
     </>
   )

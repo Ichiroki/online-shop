@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { cartState } from "../store/ShoppingCartStore";
 import { AddNewItem, CartsType } from "../types/Cart";
+import { Bounce, Slide, toast } from "react-toastify";
 
 const useCart = () => {
   const [carts, setCarts] = useRecoilState<CartsType[]>(cartState);
@@ -34,14 +35,28 @@ const useCart = () => {
         );
         setCarts(updatedCart);
 
-        await axios.post('/add-to-cart', newItem)
+        toast.success("New item has been added to your cart", {
+          autoClose: 5000,
+          closeOnClick: true,
+          draggable: true,
+          hideProgressBar: false,
+          pauseOnHover: true,
+          position: "top-right",
+          progress: undefined,
+          theme: "light",
+          toastId: crypto.randomUUID(),
+          transition: Bounce
+        })
+
+        await axios.post('/add-to-cart', newItem)       
       } else {
         // If the item is not in the cart, add it to the cart
         const newItem: AddNewItem = { userId, productId, quantity };
 
         setCarts([...carts, newItem])
-        
+
         await axios.post('/add-to-cart', newItem)
+
       }
     } catch (e) {
       console.log(e);
@@ -81,7 +96,7 @@ const useCart = () => {
     await deleteFromCart(userId, productId);
   };
 
-  return { carts, handleAddToCart, handleDeleteFromCart };
+  return { carts, handleAddToCart, handleDeleteFromCart, addToCart, deleteFromCart };
 };
 
 export default useCart;
