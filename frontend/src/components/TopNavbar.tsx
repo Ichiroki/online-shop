@@ -3,19 +3,23 @@ import {
   Container,
   Nav,
   NavDropdown,
+  Navbar,
   Navbar as NavbarBs,
 } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import useCart from "../app/function/CartFunction"
+import { authenticatedUserState } from "../app/store/AuthStore"
 import CartOffcanvas from "./CartOffcanvas"
-import useCart from "../function/CartFunction"
 
 function TopNavbar() {
-  const users = localStorage.getItem("authenticated")
-  const user = users ? JSON.parse(users) : null
+  const users = useRecoilValue(authenticatedUserState)
+  const loggedIn = useSetRecoilState(authenticatedUserState)
 
   const handleLogout = async () => {
     try {
       await axios.get("/logout")
+      loggedIn(null)
       localStorage.removeItem("authenticated")
       window.location.href = "/"
     } catch (e) {
@@ -33,6 +37,7 @@ function TopNavbar() {
         bg='primary'
         data-bs-theme='dark'>
         <Container>
+          <Navbar.Brand>Ichiroki</Navbar.Brand>
           <Nav className='me-auto'>
             <Nav.Link to='/' as={NavLink}>
               Home
@@ -45,12 +50,12 @@ function TopNavbar() {
             </Nav.Link>
           </Nav>
           <Nav>
-            {user ? (
+            {users ? (
               <>
-                <Nav>
+                <Nav className="me-2">
                   <NavDropdown
                     id='profile-nav'
-                    title={user?.name}
+                    title={users?.name}
                     menuVariant='dark'
                     data-bs-theme='light'>
                     <NavDropdown.Item href='#action/3.1'>

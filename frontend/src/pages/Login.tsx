@@ -2,6 +2,9 @@ import axios from "axios"
 import cryptoRandomString from "crypto-random-string"
 import { useState } from "react"
 import { Nav, Stack } from "react-bootstrap"
+import { useSetRecoilState } from "recoil"
+import { ZodError } from "zod"
+import { authenticatedUserState } from "../app/store/AuthStore"
 
 function Login() {
   const [email, setEmail] = useState("")
@@ -9,6 +12,11 @@ function Login() {
   const [csrfToken, setCsrfToken] = useState(
     cryptoRandomString({ length: 32, type: "url-safe" }),
   )
+
+  const [emailErr, setEmailErr] = useState("")
+  const [passwordErr, setPasswordErr] = useState("")
+
+  const setLoggedIn = useSetRecoilState(authenticatedUserState)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -26,11 +34,29 @@ function Login() {
         },
       )
       const parsedData = JSON.stringify(response.data.user)
-      console.log(parsedData)
       localStorage.setItem("authenticated", parsedData)
+      setLoggedIn(parsedData)
       window.location.href = "/"
     } catch (e) {
-      console.log("Internal server error, please wait " + e)
+      if (axios.isAxiosError(e)) {
+        // Jika ini adalah AxiosError, coba lihat responsnya
+        if (e.response) {
+          console.error("Server responded with status", e.response.status);
+          console.error("Error details:", e.response.data.error.email);
+
+          const email = e.response.data.error.email
+          const password = e.response.data.error.password
+          
+          setEmailErr(email)
+          setPasswordErr(password)
+        } else {
+          console.error("Request failed before getting a response from the server");
+        }
+      } else if (e instanceof ZodError) {
+        console.log("Internal server error, please wait " + e);
+      } else {
+        console.error("Unexpected error occurred:", e);
+      }
     }
   }
 
@@ -44,7 +70,7 @@ function Login() {
                 Login
               </h5>
               <div className='card-text'>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
                   <div className='mb-3'>
                     <input
                       type='hidden'
@@ -64,6 +90,9 @@ function Login() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
+                    {emailErr && (
+                      <p className="text-danger">{emailErr}</p>
+                    )}
                   </div>
                   <div className='mb-3'>
                     <label htmlFor='password' className='form-label'>
@@ -77,6 +106,9 @@ function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    {passwordErr && (
+                      <p className="text-danger">{passwordErr}</p>
+                    )}
                   </div>
                   <Stack gap={3} direction='horizontal'>
                     <button type='submit' className='btn btn-success'>

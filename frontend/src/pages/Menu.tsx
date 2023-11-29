@@ -1,25 +1,32 @@
-import { useRecoilValueLoadable } from "recoil"
+import { Container, Stack } from "react-bootstrap"
 import MenuList from "../components/MenuList"
-// import { menuState, useMenu } from "../store/MenuStore"
-import { useEffect } from "react"
 import TopNavbar from "../components/TopNavbar"
-import { Container } from "react-bootstrap"
+import { useRecoilState } from "recoil"
+import { menuSearchState } from "../app/store/MenuSearchStore"
+import { Form } from "react-bootstrap"
 
 function Menu() {
-  // const menus = useRecoilValueLoadable(menuState)
-  // const { fetchMenu } = useMenu()
 
-  // useEffect(() => {
-  //   fetchMenu()
-  // }, [])
+  const [searchTerm, setSearchTerm] = useRecoilState(menuSearchState)
 
   return (
     <>
       <TopNavbar />
       <Container className='mb-4'>
-        <h1>Menu</h1>
-        {/* {menus.state === "hasValue" && } */}
-        <MenuList />
+        <Stack direction="horizontal" >
+          <h1>Menu</h1>
+          <Form className="ms-auto">
+            <Form.Group>
+              <Form.Control 
+                type="text"
+                placeholder="Search Menu"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Stack>
+        <MenuList searchTerm={searchTerm}/>
       </Container>
     </>
   )
