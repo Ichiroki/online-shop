@@ -1,6 +1,6 @@
 import { Container, Stack } from "react-bootstrap"
-import MenuList from "../components/MenuList"
-import TopNavbar from "../components/TopNavbar"
+import MenuList from "../components/Menu/MenuList"
+import TopNavbar from "../components/Layout/TopNavbar"
 import { useRecoilState } from "recoil"
 import { menuSearchState } from "../app/store/MenuSearchStore"
 import { Form } from "react-bootstrap"

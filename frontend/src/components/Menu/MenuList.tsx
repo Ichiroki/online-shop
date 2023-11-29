@@ -1,8 +1,8 @@
 // MenuList.tsx
 import { Button, Card, Col, Row, Spinner } from "react-bootstrap"
-import useCart from "../app/function/CartFunction"
-import { useMenu } from "../app/function/MenuFunction"
-import formatCurrency from "../app/utilities/formatCurrency"
+import useCart from "../../app/function/CartFunction"
+import { useMenu } from "../../app/function/MenuFunction"
+import formatCurrency from "../../app/utilities/formatCurrency"
 import React from "react"
 
 function MenuList({searchTerm}) {

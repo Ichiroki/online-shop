@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Row, Stack } from "react-bootstrap";
-import useCart from "../app/function/CartFunction";
-import formatCurrency from "../app/utilities/formatCurrency";
+import useCart from "../../app/function/CartFunction";
+import formatCurrency from "../../app/utilities/formatCurrency";
 
 function MenuInCart({menu}) {
     const { handleAddToCart, handleDeleteFromCart } = useCart()

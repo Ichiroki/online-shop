@@ -8,9 +8,9 @@ import {
 } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import useCart from "../app/function/CartFunction"
-import { authenticatedUserState } from "../app/store/AuthStore"
-import CartOffcanvas from "./CartOffcanvas"
+import useCart from "../../app/function/CartFunction"
+import { authenticatedUserState } from "../../app/store/AuthStore"
+import CartOffcanvas from "../Cart/CartOffcanvas"
 
 function TopNavbar() {
   const users = useRecoilValue(authenticatedUserState)
