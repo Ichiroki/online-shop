@@ -29,6 +29,7 @@ async function run() {
          {
             id: 'acc90fb0-f782-488f-903e-098694aa1547',
             name: 'Ice Cappucino Coffee',
+            slug: 'ice-cappucino-coffee',
             desc: 'Cappucino coffee that can bring back your mood',
             price: 8000,
             image: 'iceCappucinoCoffee.png',
@@ -38,6 +39,7 @@ async function run() {
          {
             id: '3dd06ca6-b8d3-4833-9800-a884453a41c5',
             name: 'Mocha Latte',
+            slug: 'mocha-latte',
             desc: 'Mocha Latte that can bring back your mood',
             price: 8000,
             image: 'mochaLatte.jpg',
@@ -47,6 +49,7 @@ async function run() {
          {
             id: '302dd14f-5893-469b-8127-890c7035642f',
             name: 'Black Coffee',
+            slug: 'black-coffee',
             desc: 'Black Coffee that can bring back your mood',
             price: 7000,
             image: 'blackCoffee.png',
@@ -56,6 +59,7 @@ async function run() {
          {
             id: 'a6d251f7-a892-489c-b679-bc7928643d79',
             name: 'Ice Tea',
+            slug: 'ice-tea',
             desc: 'Ice Tea that can bring back your mood',
             price: 5000,
             image: 'iceTea.jpg',
@@ -65,6 +69,7 @@ async function run() {
          {
             id: 'd54c606e-2246-4916-87a6-587fc9ac937b',
             name: 'Matcha Tea',
+            slug: 'matcha-tea',
             desc: 'Matcha Tea that can bring back your mood',
             price: 6000,
             image: 'matchaTea.png',
@@ -74,6 +79,7 @@ async function run() {
          {
             id: '06c5cc3d-e182-4f0c-bf4c-7eaad184bbb4',
             name: 'Donut',
+            slug: 'donut',
             desc: 'A circle donut with caramel',
             price: 5000,
             image: 'donut.jpg',
@@ -83,6 +89,7 @@ async function run() {
          {
             id: '02a67dbb-e77c-4b2b-bc77-6e0251b10a7f',
             name: 'Brownies',
+            slug: 'brownies',
             desc: 'Black choco brownies can melt in your mouth',
             price: 10000,
             image: 'brownies.jpg',

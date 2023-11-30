@@ -12,10 +12,23 @@ export const cartGet = async(req, res) => {
                 where: {
                     userId: userData.id
                 },
-                include: {
-                    products: true,
-                    users: true
-                }
+                select: {
+                    products: {
+                        select: {
+                            id: true,
+                            name: true,
+                            image: true,
+                            price: true
+                        }
+                    },
+                    users: {
+                        select: {
+                            id: true,
+                        }
+                    },
+                    quantity: true
+                    
+                },
             })
             return res.status(201).json(carts);
         } else {

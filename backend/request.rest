@@ -22,3 +22,15 @@ Content-Type: application/json
 
 GET http://127.0.0.1:3000/cart
 Content-Type: application/json
+
+###
+
+POST http://127.0.0.1:3000/add-rating
+Content-Type: application/json
+
+{
+   "userId" : "7eb478b4-6d41-4ca8-b35d-9bb0c4f8cb22",
+   "productId" : "06c5cc3d-e182-4f0c-bf4c-7eaad184bbb4",
+   "rating" : 5,
+   "feedback" : "lorem ipsum dolor sit amet..."
+}

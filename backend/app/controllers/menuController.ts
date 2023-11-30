@@ -34,6 +34,17 @@ export const addRating = async (userId: string, productId: string, rating: numbe
          }
       })
 
+      const existingRating = await prisma.productrating.findFirst({
+         where: {
+            userId,
+            productId,
+         }
+      })
+
+      if(existingRating) {
+         throw new Error('You already give rating to this menu')
+      }
+
       if(!product || !user) {
          throw new Error('Product or user tidak ditemukan')
       }
@@ -56,12 +67,39 @@ export const addRating = async (userId: string, productId: string, rating: numbe
 // For API Only
 
 export const menuGetAPI = async (req, res) => {
+   const {param1} =  req.params
+
    try {
-      const menus = await prisma.products.findMany()
-      res.status(201).json(menus)
+      if(param1) {
+         const menus = await prisma.products.findFirst({
+            where: {
+               slug: param1,
+            },
+            include: {
+               productrating : {
+                  select: {
+                     rating: true
+                  }
+               }  
+            }
+         })
+         res.status(201).json(menus)
+      } else {
+         const menus = await prisma.products.findMany()
+         res.status(201).json(menus)
+      }
    } catch(e) {
       console.log(e)
    }
 }
 
-export default { menuGet, menuGetAPI }
+export const ratingGetAPI = async(req, res) => {
+   try {
+      const rating = await prisma.productrating.findMany()
+      res.status(201).json(rating)
+   } catch(e) {
+      console.log(e)
+   }
+}
+
+export default { menuGet, menuGetAPI, addRating, ratingGetAPI }

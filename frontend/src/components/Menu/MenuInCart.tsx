@@ -5,6 +5,7 @@ import formatCurrency from "../../app/utilities/formatCurrency";
 
 function MenuInCart({menu}) {
     const { handleAddToCart, handleDeleteFromCart } = useCart()
+
     const [total, setTotal] = useState(0)
 
     const getTotal = () => {

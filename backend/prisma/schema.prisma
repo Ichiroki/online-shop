@@ -22,6 +22,7 @@ model cart {
 model products {
   id            String          @id @unique(map: "Products_id_key")
   name          String
+  slug          String
   desc          String          @db.VarChar(255)
   price         Decimal         @db.Decimal(15, 2)
   category      String

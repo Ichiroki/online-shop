@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button, Offcanvas, Stack } from "react-bootstrap"
 import useCart from "../../app/function/CartFunction"
 import MenuInCart from "../Menu/MenuInCart"
+import { usePayment } from "../../app/function/PaymentFunction"
 
 function CartOffcanvas() {
 
