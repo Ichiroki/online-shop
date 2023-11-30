@@ -7,6 +7,8 @@ import { ToastContainer } from "react-toastify"
 import 'react-toastify/ReactToastify.min.css'
 import { RecoilRoot } from "recoil"
 import App from "./App"
+import './index.css'
+import 'tailwindcss/tailwind.css'
 
 axios.defaults.baseURL = "http://localhost:3000"
 axios.defaults.withCredentials = true

@@ -20,14 +20,16 @@ model cart {
 }
 
 model products {
-  id        String  @id @unique(map: "Products_id_key")
-  name      String
-  desc      String  @db.VarChar(255)
-  price     Decimal @db.Decimal(15, 2)
-  category  String
-  image     String?
-  available Boolean
-  cart      cart[]
+  id            String          @id @unique(map: "Products_id_key")
+  name          String
+  slug          String
+  desc          String          @db.VarChar(255)
+  price         Decimal         @db.Decimal(15, 2)
+  category      String
+  image         String?
+  available     Boolean
+  cart          cart[]
+  productrating productrating[]
 }
 
 model order {
@@ -44,9 +46,24 @@ model order {
 }
 
 model users {
-  id       String @id @unique(map: "Users_id_key")
-  email    String @unique(map: "Users_email_key")
-  name     String
-  password String
-  cart     cart[]
+  id            String          @id @unique(map: "Users_id_key")
+  email         String          @unique(map: "Users_email_key")
+  name          String
+  password      String
+  cart          cart[]
+  productrating productrating[]
+}
+
+model productrating {
+  id         Int      @id @default(autoincrement())
+  productId  String
+  userId     String
+  rating     Int
+  feedback   String
+  created_at DateTime
+  products   products @relation(fields: [productId], references: [id])
+  users      users    @relation(fields: [userId], references: [id])
+
+  @@index([productId], map: "productrating_productId_fkey")
+  @@index([userId], map: "productrating_userId_fkey")
 }

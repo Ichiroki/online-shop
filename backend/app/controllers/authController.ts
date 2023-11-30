@@ -81,7 +81,7 @@ export const login_post = async (req, res) => {
           const user = await prisma.users.findFirst({
             where: {
               email: auth.data.email
-            }
+            },
           })
   
           if(!user) {

@@ -1,6 +1,7 @@
 export type MenuType = {
     id: string
     name: string
+    slug: string
     desc: string
     price: number
     image: string
@@ -14,4 +15,15 @@ export type MenuTypeInCart = {
     name: string
     price: number
     image: string
+}
+
+export type MenuDetails = {
+    id: string
+    name: string
+    category: string
+    desc: string
+    price: number
+    image: string
+    available: boolean
+    rating: number
 }

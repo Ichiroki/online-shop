@@ -3,8 +3,9 @@ import csurf from 'csurf';
 import { Router } from 'express';
 import addToCartController, { addToCart, deleteFromCart } from '../app/controllers/addToCartController';
 import authController from '../app/controllers/authController';
-import menuController from '../app/controllers/menuController';
+import menuController, { addRating } from '../app/controllers/menuController';
 import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
+import paymentController from '../app/controllers/paymentController';
 
 const router: Router = Router();
 const csrfProtection = csurf({cookie: true})
@@ -28,6 +29,15 @@ router.get('/logout', authController.logout_get)
 
 // Menu
 router.get('/menu', requireAuth, menuController.menuGet)
+router.post('/add-rating', async(req, res) => {
+   try {
+      const { userId, productId, rating, feedback } = req.body
+      const addRatingToMenu = await addRating(userId, productId, rating, feedback)
+      return addRatingToMenu
+   } catch(e) {
+      console.log(e)
+   }
+})
 
 
 router.post('/add-to-cart', requireAuth, async(req, res) => {
@@ -49,9 +59,13 @@ router.post('/delete-from-cart', requireAuth, async(req, res) => {
    }
 })
 
+router.post('/payment/gopay', requireAuth, paymentController.paymentMethodGopay)
+
 // For API
 router.get('/api/menu', checkUser, menuController.menuGetAPI)
+router.get('/api/menu/:param1', checkUser, menuController.menuGetAPI)
 router.get('/api/cart', addToCartController.cartGet)
+router.get('/api/rating', menuController.ratingGetAPI)
 
 
 export default router;

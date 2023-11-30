@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap"
-import TopNavbar from "../components/TopNavbar"
+import TopNavbar from "../components/Layout/TopNavbar"
 
 function Home() {
   return (

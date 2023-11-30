@@ -33,9 +33,15 @@ const useCart = () => {
         const updatedCart = carts.map(item =>
           item.products.id === newItem.productId ? { ...item, quantity: item.quantity + 1 } : item
         );
+        
         setCarts(updatedCart);
 
-        toast.success("New item has been added to your cart", {
+        await axios.post('/add-to-cart', newItem)       
+      } else {
+        // If the item is not in the cart, add it to the cart
+        const newItem: AddNewItem = { userId, productId, quantity };
+
+        toast.success("This menu added to your cart", {
           autoClose: 5000,
           closeOnClick: true,
           draggable: true,
@@ -48,15 +54,9 @@ const useCart = () => {
           transition: Bounce
         })
 
-        await axios.post('/add-to-cart', newItem)       
-      } else {
-        // If the item is not in the cart, add it to the cart
-        const newItem: AddNewItem = { userId, productId, quantity };
-
         setCarts([...carts, newItem])
 
         await axios.post('/add-to-cart', newItem)
-
       }
     } catch (e) {
       console.log(e);
