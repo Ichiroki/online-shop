@@ -1,6 +1,6 @@
 // MenuList.tsx
 import React, { useEffect, useState } from "react"
-import { Button, Card, Col, Form, Placeholder, Row, Stack } from "react-bootstrap"
+import { Button, Card, Col, FloatingLabel, Form, Placeholder, Row, Stack } from "react-bootstrap"
 import { FaStar } from 'react-icons/fa'
 import { useRecoilState } from "recoil"
 import useCart from "../../app/function/CartFunction"
@@ -11,18 +11,26 @@ import formatCurrency from "../../app/utilities/formatCurrency"
 function MenuList({searchTerm}) {
 
   const getAuthUser = localStorage.getItem('authenticated')
-  const {menus, setMenus, loading, rating, handleRatingChange} = useMenu()
+  const {menus, loading, rating} = useMenu()
   const { handleAddToCart } = useCart()
   const parsedUser = JSON.parse(getAuthUser ?? "null") 
 
+  const [minPrice, setMinPrice] = useState("0")
+  const [maxPrice, setMaxPrice] = useState("1000")
+
   const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryMenu)
   const [filteredMenus, setFilteredMenus] = useRecoilState(menuFilterState)
+    
+  const filterByPrice = (menu) => {
+    const menuPrice = menu.price
+    const min = minPrice !== '' ? parseInt(minPrice) : Number.MIN_SAFE_INTEGER
+    const max = maxPrice !== '' ? parseInt(maxPrice) : Number.MAX_SAFE_INTEGER
 
-  const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(1000)
+    return menuPrice >= min && menuPrice <= max
+  }
 
-  const filterMenu = () => {
-    const newFilteredMenus = menus
+  const filterMenu = async () => {
+    const newFilteredMenus = await menus
     .filter((menu) => selectedCategory === "all" || menu.category === selectedCategory)
     .filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
     console.log(newFilteredMenus)
@@ -31,32 +39,49 @@ function MenuList({searchTerm}) {
 
   useEffect(() => {
     filterMenu()
-  }, [selectedCategory, searchTerm, menus])
+  }, [selectedCategory, searchTerm, menus, minPrice, maxPrice])
 
   return (
     <>
       <Row direction="vertical" className="mb-3 justify-content-between gap-3">
-        <Col>
+        <Col md={3}>
             <Form.Select aria-label="Select Category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
               <option value="all">Category</option>
               <option value="food">Food</option>
               <option value="drink">Drink</option>
             </Form.Select>
-            <Form.Control
-            type="number"
-            value={minPrice}
-            onChange={(e) => setMinPrice(Number(e.target.value))}
-            placeholder="Min Price">
-            </Form.Control>
+
         </Col>
-        <Col>
-        <Form.Group>
-            <Form.Control
-            type="number"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}>
-            </Form.Control>
-          </Form.Group>
+        <Col md={6}>
+          <Row direction="horizontal" className="g-2">
+            <Col md={5}>
+              <FloatingLabel
+              controlId="minPrice"
+              label="Min Price"
+              className="mb-3">
+                <Form.Control
+                    type="number"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}>
+                </Form.Control>
+              </FloatingLabel>
+            </Col>
+            <Col md={2}>
+              <span className="text-center">-</span>
+            </Col>
+            <Col md={5}>
+              <FloatingLabel
+              controlId="maxPrice"
+              label="Max Price"
+              className="mb-3">
+                <Form.Control
+                type="number"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}>
+                </Form.Control>
+              </FloatingLabel>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row md={2} xs={1} lg={4} className='g-3'>
@@ -102,7 +127,7 @@ function MenuList({searchTerm}) {
                         </div>
                         </Card.Title>
                       <Card.Text>
-                      <Stack direction="horizontal">
+                        <Stack direction="horizontal">
                           {[...Array(5)].map((_, index) => (
                             <FaStar
                               key={index}

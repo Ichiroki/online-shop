@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { MenuType } from "../types/Menu"
-import { menuDataState, selectedCategoryMenu } from "../store/MenuStore"
+import { menuDataState } from "../store/MenuStore"
 import { useRecoilState } from "recoil"
 import { Bounce, toast } from "react-toastify"
 
@@ -12,6 +12,8 @@ export const useMenu = () => {
 
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResult, setSearchResult] = useState<MenuType[]>([])
+    
+
 
     const getMenu = async () => {
         setLoading(true)
@@ -29,6 +31,8 @@ export const useMenu = () => {
       const results = menus.filter(menu => menu.name.toLowerCase().includes(searchQuery.toLowerCase()))
       setSearchResult(results)
     }
+
+
 
     const handleRatingChange = async (userId: string, productId: string, rating: number, feedback: string) => {
       try {
