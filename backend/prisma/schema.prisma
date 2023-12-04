@@ -28,6 +28,8 @@ model products {
   category      String
   image         String?
   available     Boolean
+  best_seller   Boolean         @default(false)
+  best_product  Boolean         @default(false)
   cart          cart[]
   productrating productrating[]
 }

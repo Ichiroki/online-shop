@@ -1,9 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.filter-container {
+    display: none;
+}
 
-@layer utilities {
-    .img-responsive {
-        @apply w-24;
-    }
+.filter-container.visible {
+    display: block;
 }

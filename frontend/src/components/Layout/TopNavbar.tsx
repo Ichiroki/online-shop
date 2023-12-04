@@ -3,8 +3,7 @@ import {
   Container,
   Nav,
   NavDropdown,
-  Navbar,
-  Navbar as NavbarBs,
+  Navbar
 } from "react-bootstrap"
 import { NavLink } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from "recoil"
@@ -15,6 +14,9 @@ import CartOffcanvas from "../Cart/CartOffcanvas"
 function TopNavbar() {
   const users = useRecoilValue(authenticatedUserState)
   const loggedIn = useSetRecoilState(authenticatedUserState)
+
+  const cookie = document.cookie
+  console.log(cookie)
 
   const handleLogout = async () => {
     try {
@@ -31,65 +33,69 @@ function TopNavbar() {
 
   return (
     <>
-      <NavbarBs
+      <Navbar
         sticky='top'
         className='mb-3 shadow-sm'
         bg='primary'
-        data-bs-theme='dark'>
+        data-bs-theme='dark'
+        expand="lg">
         <Container>
           <Navbar.Brand>Ichiroki</Navbar.Brand>
-          <Nav className='me-auto'>
-            <Nav.Link to='/' as={NavLink}>
-              Home
-            </Nav.Link>
-            <Nav.Link to='/menu' as={NavLink}>
-              Menu
-            </Nav.Link>
-            <Nav.Link to='/about' as={NavLink}>
-              About
-            </Nav.Link>
-          </Nav>
-          <Nav>
-            {users ? (
-              <>
-                <Nav className="me-2">
-                  <NavDropdown
-                    id='profile-nav'
-                    title={users?.name}
-                    menuVariant='dark'
-                    data-bs-theme='light'>
-                    <NavDropdown.Item href='#action/3.1'>
-                      Dashboard
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href='#action/3.2'>
-                      Setting
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href='#action/3.3'>
-                      Wishlist
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={handleLogout}>
-                      Log Out
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                </Nav>
-                {carts.length > 0 && (
-                <CartOffcanvas></CartOffcanvas>
-                )}
-              </>
-            ) : (
-              <>
-                <Nav.Link to='/login' as={NavLink}>
-                  Login
-                </Nav.Link>
-                <Nav.Link to='/signup' as={NavLink}>
-                  Sign Up
-                </Nav.Link>
-              </>
-            )}
-          </Nav>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className='me-auto'>
+              <Nav.Link to='/' as={NavLink}>
+                Home
+              </Nav.Link>
+              <Nav.Link to='/menu' as={NavLink}>
+                Menu
+              </Nav.Link>
+              <Nav.Link to='/about' as={NavLink}>
+                About
+              </Nav.Link>
+            </Nav>
+            <Nav>
+              {users ? (
+                <>
+                  <Nav className="me-2">
+                    <NavDropdown
+                      id='profile-nav'
+                      title={users?.name}
+                      menuVariant='dark'
+                      data-bs-theme='light'>
+                      <NavDropdown.Item href='#action/3.1'>
+                        Dashboard
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href='#action/3.2'>
+                        Setting
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href='#action/3.3'>
+                        Wishlist
+                      </NavDropdown.Item>
+                      <NavDropdown.Divider />
+                      <NavDropdown.Item onClick={handleLogout}>
+                        Log Out
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </Nav>
+                </>
+              ) : (
+                <>
+                  <Nav.Link to='/login' as={NavLink}>
+                    Login
+                  </Nav.Link>
+                  <Nav.Link to='/signup' as={NavLink}>
+                    Sign Up
+                  </Nav.Link>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+          {carts.length > 0 && (
+            <CartOffcanvas></CartOffcanvas>
+          )}
         </Container>
-      </NavbarBs>
+      </Navbar>
     </>
   )
 }

@@ -28,7 +28,7 @@ router.post('/login', authController.login_post)
 router.get('/logout', authController.logout_get)
 
 // Menu
-router.get('/menu', requireAuth, menuController.menuGet)
+router.get('/menu', menuController.menuGet)
 router.post('/add-rating', async(req, res) => {
    try {
       const { userId, productId, rating, feedback } = req.body
@@ -62,8 +62,8 @@ router.post('/delete-from-cart', requireAuth, async(req, res) => {
 router.post('/payment/gopay', requireAuth, paymentController.paymentMethodGopay)
 
 // For API
-router.get('/api/menu', checkUser, menuController.menuGetAPI)
-router.get('/api/menu/:param1', checkUser, menuController.menuGetAPI)
+router.get('/api/menu', menuController.menuGetAPI)
+router.get('/api/menu/:param1', menuController.menuGetAPI)
 router.get('/api/cart', addToCartController.cartGet)
 router.get('/api/rating', menuController.ratingGetAPI)
 

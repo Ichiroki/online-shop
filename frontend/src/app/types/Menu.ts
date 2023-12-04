@@ -5,6 +5,7 @@ export type MenuType = {
     desc: string
     price: number
     image: string
+    best_seller: boolean
     category: string
     quantity: number
     available: number

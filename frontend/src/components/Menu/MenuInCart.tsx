@@ -24,10 +24,10 @@ function MenuInCart({menu}) {
             {menu.map((m) => (
                 <React.Fragment key={m.id}>
                     <Row>
-                        <Col md={4}>
+                        <Col xs={4}>
                             <img src={`public/imgs/${m.products?.image}`} width='105' />
                         </Col>
-                        <Col md={4}>
+                        <Col xs={4}>
                             <p style={{ fontSize: ".9rem", marginBottom: ".3rem" }}>
                             {m.products?.name}
                             </p>
@@ -38,7 +38,7 @@ function MenuInCart({menu}) {
                             {m.products?.price * m.quantity}
                             </p>
                         </Col>
-                        <Col md={4} gap={2}>
+                        <Col gap={2} xs={4}>
                             <Button
                             type='button'
                             variant='danger'
@@ -62,8 +62,8 @@ function MenuInCart({menu}) {
             <hr />
             <Stack>
                 <Row style={{ fontSize: "1.4rem" }}>
-                <Col md={9}>Total : {isNaN(total) ? "Invalid Total" : formatCurrency(total)}</Col>
-                <Col md={2}>
+                <Col xs={9}>Total : {isNaN(total) ? "Invalid Total" : formatCurrency(total)}</Col>
+                <Col xs={2}>
                     <Button variant='primary'>Order</Button>
                 </Col>
                 </Row>
