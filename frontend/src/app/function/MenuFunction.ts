@@ -30,20 +30,6 @@ export const useMenu = () => {
       setSearchResult(results)
     }
 
-    const handleRatingChange = async (userId: string, productId: string, rating: number, feedback: string) => {
-      try {
-        await axios.post("/add-rating", {
-          userId,
-          productId,
-          rating,
-          feedback
-        })
-
-      } catch(e) {
-        console.log("Internal server error, please wait " + e)
-      }
-    }
-
     const getRating = async () => {
       try {
         const response = await axios.get('/api/rating')
@@ -53,36 +39,10 @@ export const useMenu = () => {
       }
     }
 
-    const addRating = async (userId: string, productId: string, rating: number, feedback: string) => {
-      try {
-        await axios.post('/add-rating', {
-          userId,
-          productId,
-          rating,
-          feedback
-        })
-
-        toast.success("Thank you for your rating and feedback", {
-          autoClose: 5000,
-          closeOnClick: true,
-          draggable: true,
-          hideProgressBar: false,
-          pauseOnHover: true,
-          position: "top-right",
-          progress: undefined,
-          theme: "light",
-          toastId: crypto.randomUUID(),
-          transition: Bounce
-        })
-      } catch(e) {
-        console.log(e)
-      }
-    }
-
     useEffect(() => {
       getMenu()
       getRating()
     }, [])
 
-    return { menus, loading, searchQuery, searchResult, rating, setMenus, setSearchQuery, handleSearch, handleRatingChange, addRating }
+    return { menus, loading, searchQuery, searchResult, rating, setMenus, setSearchQuery, handleSearch }
 }

@@ -7,7 +7,13 @@ export const menuGet = async (req, res, next) => {
    const token = req.cookies.accessToken
 
    try {
-      const menus = await prisma.products.findMany()
+      const menus = await prisma.products.findMany(
+         {
+            include: {
+               productrating: true
+            }
+         }
+      )
       res.render('menu/menu', {
          menus,
          active: 'Menu',
@@ -78,14 +84,27 @@ export const menuGetAPI = async (req, res) => {
             include: {
                productrating : {
                   select: {
-                     rating: true
+                     rating: true,
+                     feedback: true,
+                     created_at: true,
+                     users: {
+                        select: {
+                           name: true,
+                        }
+                     }
                   }
                }  
             }
-         })
+         }) 
          res.status(201).json(menus)
       } else {
-         const menus = await prisma.products.findMany()
+         const menus = await prisma.products.findMany(
+            {
+               include: {
+                  productrating: true,
+               }
+            }
+         )
          res.status(201).json(menus)
       }
    } catch(e) {
@@ -94,9 +113,36 @@ export const menuGetAPI = async (req, res) => {
 }
 
 export const ratingGetAPI = async(req, res) => {
+   const {param1} = req.params
+
    try {
-      const rating = await prisma.productrating.findMany()
-      res.status(201).json(rating)
+      if(param1) {
+         const rating = await prisma.productrating.findFirst({
+            where: {
+               products: {
+                  slug: param1
+               }
+            },
+            select: {
+               rating: true,
+               feedback: true,
+               users: {
+                  select: {
+                     name: true
+                  }
+               }
+            }
+         })
+
+         res.status(201).json(rating)
+      } else {
+         const rating = await prisma.productrating.findMany({
+            include: {
+               users: true
+            }
+         })
+         res.status(201).json(rating)
+      }
    } catch(e) {
       console.log(e)
    }

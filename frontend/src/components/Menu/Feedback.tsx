@@ -6,7 +6,7 @@ function Feedback(props) {
     const {rating} = props
     return (
         <>
-            <Card className="mb-3">
+            <Card className="my-3">
                 <Card.Body>
                     <Stack>
                         {' '}

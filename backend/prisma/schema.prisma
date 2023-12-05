@@ -30,6 +30,7 @@ model products {
   available     Boolean
   best_seller   Boolean         @default(false)
   best_product  Boolean         @default(false)
+  halal         Boolean         @default(true)
   cart          cart[]
   productrating productrating[]
 }
@@ -61,7 +62,7 @@ model productrating {
   productId  String
   userId     String
   rating     Int
-  feedback   String
+  feedback   String?
   created_at DateTime
   products   products @relation(fields: [productId], references: [id])
   users      users    @relation(fields: [userId], references: [id])

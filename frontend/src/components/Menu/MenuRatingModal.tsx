@@ -3,6 +3,8 @@ import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import { FaStar } from 'react-icons/fa';
 import { useMenu } from '../../app/function/MenuFunction';
+import { Bounce, toast } from 'react-toastify';
+import axios from 'axios';
 
 function MenuRatingModal(props) {
 
@@ -11,7 +13,49 @@ function MenuRatingModal(props) {
 
     const [feedback, setFeedback] = useState('')
 
-    const { addRating } = useMenu()
+    const addRating = async (userId: string, productId: string, rating: number, feedback: string) => {
+        try {
+            if(!rating) {
+                toast.error("Please, give us a star", {
+                  autoClose: 5000,
+                  closeOnClick: true,
+                  draggable: true,
+                  hideProgressBar: false,
+                  pauseOnHover: true,
+                  position: "top-right",
+                  progress: undefined,
+                  theme: "light",
+                  toastId: crypto.randomUUID(),
+                  transition: Bounce
+                })
+            } else {
+                toast.success("Thank you for your rating and feedback", {
+                  autoClose: 5000,
+                  closeOnClick: true,
+                  draggable: true,
+                  hideProgressBar: false,
+                  pauseOnHover: true,
+                  position: "top-right",
+                  progress: undefined,
+                  theme: "light",
+                  toastId: crypto.randomUUID(),
+                  transition: Bounce
+                })
+
+                props.onHide()
+                
+                return await axios.post("/add-rating", {
+                    userId,
+                    productId,
+                    rating,
+                    feedback
+                })
+            }
+        } catch(e) {
+          console.log(e)
+        }
+      }
+
     const authUser = localStorage.getItem('authenticated')
 
     const {menu} = props
@@ -38,7 +82,7 @@ function MenuRatingModal(props) {
                             {[...Array(5)].map((_, index) => (
                                 <FaStar
                                 key={index}
-                                size={18}
+                                size={24}
                                 style={{ color: index < (hoverRating || selectedRating) ? "ffc107" : '#e4e5e9', cursor: "pointer" }}
                                 onMouseEnter={() => setHoverRating(index + 1)}
                                 onMouseLeave={() => setHoverRating(0)}

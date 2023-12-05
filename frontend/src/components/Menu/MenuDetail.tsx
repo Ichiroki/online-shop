@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import { MenuDetails } from '../../app/types/Menu'
 import formatCurrency from '../../app/utilities/formatCurrency'
 import TopNavbar from '../Layout/TopNavbar'
-import MenuRatingModal from './MenuRatingMod'
+import MenuRatingModal from './MenuRatingModal'
 import Feedback from './Feedback'
 import { useMenu } from '../../app/function/MenuFunction'
 
@@ -26,6 +26,7 @@ function MenuDetail() {
             console.log("Internal error, please wait " + e)
         }
     }
+    
 
     useEffect(() => {
         getMenuDetails()
@@ -36,17 +37,17 @@ function MenuDetail() {
             <TopNavbar/>
             <Container>
                 <Row className="d-flex justify-content-between">
-                    <Col md={12} lg={4}>
+                    <Col md={12} lg={4} xl={3}>
                         <img src={`/public/imgs/${menu.image}`} className='w-100 w-md-75'/>
                     </Col>
-                    <Col md={6} lg={4} className="mt-5 mt-lg-0">
+                    <Col md={6} lg={4} xl={6} className="mt-5 mt-lg-0">
                         <h1>{menu.name}</h1>
                         <span>Category : <span className="text-capitalize">{menu.category}</span></span>
                         <br/>
                         <span>{menu.desc}</span>
                     </Col>
-                    <Col md={6} lg={4} className="mt-5 mt-lg-0">
-                        <Card style={{ width: '18rem' }} className="shadow-sm">
+                    <Col md={6} lg={4} xl={3} className="mt-5 mt-lg-0">
+                        <Card className="shadow-sm">
                             <Card.Body>
                                 <Card.Header className="mb-3">
                                     <Card.Title className="text-center">Details</Card.Title>

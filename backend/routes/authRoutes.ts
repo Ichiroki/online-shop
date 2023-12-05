@@ -66,6 +66,7 @@ router.get('/api/menu', menuController.menuGetAPI)
 router.get('/api/menu/:param1', menuController.menuGetAPI)
 router.get('/api/cart', addToCartController.cartGet)
 router.get('/api/rating', menuController.ratingGetAPI)
+router.get('/api/rating/:param1', menuController.ratingGetAPI)
 
 
 export default router;
