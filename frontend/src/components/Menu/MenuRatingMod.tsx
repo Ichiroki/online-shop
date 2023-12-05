@@ -1,9 +1,22 @@
-import { Button, Col, FloatingLabel, Row, Stack } from 'react-bootstrap';
-import Modal from 'react-bootstrap/Modal'
+import { useState } from 'react';
+import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
+import Modal from 'react-bootstrap/Modal';
 import { FaStar } from 'react-icons/fa';
-import { Form } from 'react-bootstrap';
+import { useMenu } from '../../app/function/MenuFunction';
 
 function MenuRatingModal(props) {
+
+    const [hoverRating, setHoverRating] = useState(0)
+    const [selectedRating, setSelectedRating] = useState(0)
+
+    const [feedback, setFeedback] = useState('')
+
+    const { addRating } = useMenu()
+    const authUser = localStorage.getItem('authenticated')
+
+    const {menu} = props
+    const userId = JSON.parse(authUser || "null").id
+
     return (
         <>
             <Modal
@@ -26,16 +39,23 @@ function MenuRatingModal(props) {
                                 <FaStar
                                 key={index}
                                 size={18}
-                                style={{ color: '#e4e5e9' }}
+                                style={{ color: index < (hoverRating || selectedRating) ? "ffc107" : '#e4e5e9', cursor: "pointer" }}
+                                onMouseEnter={() => setHoverRating(index + 1)}
+                                onMouseLeave={() => setHoverRating(0)}
+                                onClick={() => setSelectedRating(index + 1)}
                                 />
                             ))}
+                            <span className="d-inline-block ms-3">{hoverRating || selectedRating}</span>
                         </Form.Group>
                         <FloatingLabel
                         controlId="floatingTextarea"
                         label="Feedback"
                         className="mb-3"
                         >
-                            <Form.Control as="textarea" placeholder="Leave a feedback here" style={{ height: '100px' }} />
+                            <Form.Control as="textarea" placeholder="Leave a feedback here" style={{ height: '100px' }} 
+                            value={feedback}
+                            onChange={(e) => setFeedback(e.target.value)}
+                            />
                         </FloatingLabel>
                     </Form>
                 </Modal.Body>
@@ -45,7 +65,7 @@ function MenuRatingModal(props) {
                             <Button onClick={props.onHide}>Close</Button>
                         </Col>
                         <Col>
-                            <Button variant="success" onClick={props.onHide}>Submit</Button>
+                            <Button variant="success" onClick={() => addRating(userId, menu.id, selectedRating, feedback)}>Submit</Button>
                         </Col>
                     </Row>
                 </Modal.Footer>

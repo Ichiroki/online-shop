@@ -1,20 +1,18 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { MenuType } from "../types/Menu"
-import { menuDataState } from "../store/MenuStore"
+import { menuDataState, menuRating } from "../store/MenuStore"
 import { useRecoilState } from "recoil"
 import { Bounce, toast } from "react-toastify"
 
 export const useMenu = () => {
     const [menus, setMenus] = useRecoilState(menuDataState)
     const [loading, setLoading] = useState(false)
-    const [rating, setRating] = useState(0)
+    const [rating, setRating] = useRecoilState(menuRating)
 
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResult, setSearchResult] = useState<MenuType[]>([])
-    
-
-
+  
     const getMenu = async () => {
         setLoading(true)
         try {
@@ -31,8 +29,6 @@ export const useMenu = () => {
       const results = menus.filter(menu => menu.name.toLowerCase().includes(searchQuery.toLowerCase()))
       setSearchResult(results)
     }
-
-
 
     const handleRatingChange = async (userId: string, productId: string, rating: number, feedback: string) => {
       try {
@@ -66,7 +62,7 @@ export const useMenu = () => {
           feedback
         })
 
-        toast.success("This menu added to your cart", {
+        toast.success("Thank you for your rating and feedback", {
           autoClose: 5000,
           closeOnClick: true,
           draggable: true,

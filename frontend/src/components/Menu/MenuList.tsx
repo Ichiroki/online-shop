@@ -19,6 +19,8 @@ function MenuList({searchTerm}) {
   const [minPrice, setMinPrice] = useState("5000")
   const [maxPrice, setMaxPrice] = useState("10000")
   const [bestSeller, setBestSeller] = useState(false)
+  const [bestProduct, setBestProduct] = useState(false)
+  const [avail, setAvail] = useState(false)
 
   const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryMenu)
   const [filteredMenus, setFilteredMenus] = useRecoilState(menuFilterState)
@@ -42,20 +44,30 @@ function MenuList({searchTerm}) {
     .filter((menu) => selectedCategory === "all" || menu.category === selectedCategory)
     .filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter((item) => (!bestSeller || item.best_seller))
+    .filter((item) => (!bestProduct || item.best_product))
+    .filter((item) => (!avail || item.available))
     .filter(filterByPrice)
     setFilteredMenus(newFilteredMenus)
   }
 
   useEffect(() => {
     filterMenu()
-  }, [selectedCategory, searchTerm, menus, minPrice, maxPrice, bestSeller])
+  }, [
+    selectedCategory, 
+    searchTerm, 
+    menus,
+    minPrice, 
+    maxPrice, 
+    bestSeller, 
+    bestProduct,
+  ])
 
   return (
     <>
     <Row>
       <Col>
         <Button variant="primary" onClick={handleFilterButtonClick} className="mb-3">Filter</Button>
-        <FilterMenu minPrice={minPrice} maxPrice={maxPrice} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} setBestSeller={setBestSeller} show={show}/>
+        <FilterMenu minPrice={minPrice} maxPrice={maxPrice} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} setBestSeller={setBestSeller} show={show} setAvail={setAvail} setBestProduct={setBestProduct}/>
         <Row md={2} xs={1} lg={4} className='g-3'>
           {loading ? (
             <>
@@ -88,6 +100,9 @@ function MenuList({searchTerm}) {
                       <Card.Img variant='top' src={`public/imgs/${item.image}`} title={'Menu Image'}/>
                       {item.best_seller && (
                         <p style={{ position: "absolute", top: "1rem", color: "aliceblue", backgroundColor: "#F33", padding: '0 2.3rem',  }}>Best Seller</p>
+                      )}
+                      {item.best_product && (
+                        <p style={{ position: "absolute", top: "3rem", color: "aliceblue", backgroundColor: "#3A3", padding: '0 2.3rem',  }}>Best Product</p>
                       )}
                       <Card.Body>
                         <Card.Title>

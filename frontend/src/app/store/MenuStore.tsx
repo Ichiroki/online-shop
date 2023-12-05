@@ -1,5 +1,5 @@
 import { atom } from 'recoil'
-import { MenuType } from '../types/Menu'
+import { MenuRating, MenuType } from '../types/Menu'
 
 export const menuDataState = atom<MenuType[]>({
     key: 'menuData',
@@ -18,5 +18,10 @@ export const selectedCategoryMenu = atom({
 
 export const menuFilterState = atom<MenuType[]>({
     key: 'menuFilter',
+    default: []
+})
+
+export const menuRating = atom<MenuRating[]>({
+    key: 'menuRating',
     default: []
 })

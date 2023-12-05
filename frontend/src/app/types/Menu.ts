@@ -1,3 +1,5 @@
+import { UsersType } from "./User"
+
 export type MenuType = {
     id: string
     name: string
@@ -6,9 +8,22 @@ export type MenuType = {
     price: number
     image: string
     best_seller: boolean
+    best_product: boolean
     category: string
     quantity: number
     available: number
+    productrating: MenuRating
+}
+
+export interface MenuRating {
+    id: number
+    productId: number
+    userId: number
+    rating: number
+    feedback: string
+    created_at: Date
+    products: MenuType
+    users: UsersType
 }
 
 export type MenuTypeInCart = {

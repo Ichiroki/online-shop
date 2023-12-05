@@ -15,9 +15,6 @@ function TopNavbar() {
   const users = useRecoilValue(authenticatedUserState)
   const loggedIn = useSetRecoilState(authenticatedUserState)
 
-  const cookie = document.cookie
-  console.log(cookie)
-
   const handleLogout = async () => {
     try {
       await axios.get("/logout")
@@ -90,10 +87,10 @@ function TopNavbar() {
                 </>
               )}
             </Nav>
+            {carts.length > 0 && (
+              <CartOffcanvas></CartOffcanvas>
+            )}
           </Navbar.Collapse>
-          {carts.length > 0 && (
-            <CartOffcanvas></CartOffcanvas>
-          )}
         </Container>
       </Navbar>
     </>

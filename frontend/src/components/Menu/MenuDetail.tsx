@@ -7,11 +7,16 @@ import { MenuDetails } from '../../app/types/Menu'
 import formatCurrency from '../../app/utilities/formatCurrency'
 import TopNavbar from '../Layout/TopNavbar'
 import MenuRatingModal from './MenuRatingMod'
+import Feedback from './Feedback'
+import { useMenu } from '../../app/function/MenuFunction'
 
 function MenuDetail() {
     const {slug} = useParams()
+    const {rating} = useMenu()
     const [menu, setMenu] = useState<MenuDetails>([])
     const [modalShow, setModalShow] = useState(false)
+
+    const getRatingLength = rating.length
 
     const getMenuDetails = async () => {
         try {
@@ -46,16 +51,16 @@ function MenuDetail() {
                                 <Card.Header className="mb-3">
                                     <Card.Title className="text-center">Details</Card.Title>
                                 </Card.Header>
-                                <Card.Text>
+                                <Card.Text as={"div"} className="mb-3">
                                     <Row>
-                                        <Col md={3}>Price</Col>
-                                        <Col md={1}>:</Col>
-                                        <Col md={6}>{formatCurrency(menu.price)}</Col>
+                                        <Col xs={3}>Price</Col>
+                                        <Col xs={1}>:</Col>
+                                        <Col xs={6}>{formatCurrency(menu.price)}</Col>
                                     </Row>
                                     <Row>
-                                        <Col md={3}>Rating</Col>
-                                        <Col md={1}>:</Col>
-                                        <Col md={6}>
+                                        <Col xs={3}>Rating</Col>
+                                        <Col xs={1}>:</Col>
+                                        <Col xs={5}>
                                             {[...Array(5)].map((_,index) => {
                                                 return (
                                                     <FaStar
@@ -63,8 +68,11 @@ function MenuDetail() {
                                                     size={18}
                                                     style={{ color: index < menu.rating ? '#ffc107' : '#e4e5e9' }}
                                                   />
-                                                )
+                                            )
                                             })}
+                                        </Col>
+                                        <Col xs={2}>
+                                            <sub>({getRatingLength})</sub>
                                         </Col>
                                     </Row>
                                 </Card.Text>
@@ -78,8 +86,13 @@ function MenuDetail() {
                         </Card>
                     </Col>
                 </Row>
+                <h1 className="display-6 mt-5">What are they say about this menu ?</h1>
+                <hr/>
+                {rating.map((item) => (
+                    <Feedback key={item.id} rating={item}/>
+                ))}
             </Container>
-            <MenuRatingModal show={modalShow} onHide={() => setModalShow(false)} name={MenuDetail}/>
+            <MenuRatingModal show={modalShow} onHide={() => setModalShow(false)} name={MenuDetail} menu={menu}/>
         </>
     );
 }

@@ -1,6 +1,6 @@
-import { Col, FloatingLabel, Form, Row } from "react-bootstrap";
+import { Col, FloatingLabel, Form, Row, Stack } from "react-bootstrap";
 
-function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, setMinPrice, setMaxPrice, show, setBestSeller}) {
+function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, setMinPrice, setMaxPrice, show, setBestSeller, setAvail, setBestProduct}) {
     const handleMinPriceChange = (e) => {
         setMinPrice(e.target.value)
     }
@@ -11,6 +11,14 @@ function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, 
 
     const handleBestSellerChange = (e) => {
         setBestSeller(e.target.checked)
+    }
+
+    const handleBestProductChange = (e) => {
+        setBestProduct(e.target.checked)
+    }
+
+    const handleAvailableChange = (e) => {
+        setAvail(e.target.checked)
     }
 
     return (
@@ -27,19 +35,7 @@ function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, 
                     </Col>
                     <Col xs={12} md={12}>
                     <Row direction="horizontal" className="g-2">
-                        <Col md={6}>
-                        <FloatingLabel
-                        controlId="minPrice"
-                        label="Min Price"
-                        className="mb-3">
-                            <Form.Control
-                                type="number"
-                                value={minPrice}
-                                onChange={handleMinPriceChange}>
-                            </Form.Control>
-                        </FloatingLabel>
-                        </Col>
-                        <Col md={6}>
+                        <Col md={12}>
                         <FloatingLabel
                         controlId="maxPrice"
                         label="Max Price"
@@ -52,11 +48,19 @@ function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, 
                         </FloatingLabel>
                         </Col>
                         <Col md={12}>
-                            <Form.Check type="checkbox" label="Best Seller" onChange={handleBestSellerChange}/>
+                            <input type="range" name="" id="" className="form-range" min="5000" max="10000" onChange={(e) => setMaxPrice(e.target.value)} step="1000"/>
                         </Col>
-                        <Col md={12}>
-                            <input type="range" name="" id="" className="form-range" min="5000" max="20000" onChange={(e) => setMaxPrice(e.target.value)} step="5000"/>
-                        </Col>
+                        <Stack>
+                            <Col md={2}>
+                                <Form.Check type="checkbox" label="Best Seller" onChange={handleBestSellerChange}/>
+                            </Col>
+                            <Col md={2}>
+                                <Form.Check type="checkbox" label="Best Product" onChange={handleBestProductChange}/>
+                            </Col>
+                            <Col md={2}>
+                                <Form.Check type="checkbox" label="Available" onChange={handleAvailableChange}/>
+                            </Col>
+                        </Stack>
                     </Row>
                     </Col>
                 </Row>
