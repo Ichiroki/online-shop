@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import { FaStar } from 'react-icons/fa';
 import { useMenu } from '../../app/function/MenuFunction';
 import { Bounce, toast } from 'react-toastify';
 import axios from 'axios';
+import { MenuRating } from '../../app/types/Menu';
 
 function MenuRatingModal(props) {
 
@@ -54,7 +55,7 @@ function MenuRatingModal(props) {
         } catch(e) {
           console.log(e)
         }
-      }
+    }
 
     const authUser = localStorage.getItem('authenticated')
 

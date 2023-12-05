@@ -26,7 +26,6 @@ function MenuDetail() {
             console.log("Internal error, please wait " + e)
         }
     }
-    
 
     useEffect(() => {
         getMenuDetails()

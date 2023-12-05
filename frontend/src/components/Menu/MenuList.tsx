@@ -33,6 +33,13 @@ function MenuList({searchTerm}) {
     return menuPrice >= min && menuPrice <= max
   }
 
+  const totalRating = rating.reduce((sum, rating) => sum + rating.rating, 0)
+
+  const totalUsers = rating.length
+  const avgRating = totalRating / totalUsers
+
+  console.log(avgRating)
+
   const [show, setShow] = useState(false)
 
   const handleFilterButtonClick = () => {
@@ -49,6 +56,29 @@ function MenuList({searchTerm}) {
     .filter(filterByPrice)
     setFilteredMenus(newFilteredMenus)
   }
+
+  const ratingCountByProduct = filteredMenus.reduce((countMap, item) => {
+    const productId = item.id
+    const ratingCount = rating.filter((r) => r.productId.toString() === productId).length
+    countMap[productId] = ratingCount
+    return countMap
+  }, {})
+
+  const ratingByProduct = {}
+
+  rating.forEach((r) => {
+    const productId = r.productId
+
+    if(productId in ratingByProduct) {
+      ratingByProduct[productId].totalRating += r.rating
+      ratingByProduct[productId].totalUsers += 1
+    } else {
+      ratingByProduct[productId] = {
+        totalRating: 0,
+        totalUsers: 0
+      }
+    }
+  })
 
   useEffect(() => {
     filterMenu()
@@ -93,64 +123,64 @@ function MenuList({searchTerm}) {
             </>
           ) : (
             filteredMenus.map((item) => (
-              <>
-                <React.Fragment key={item.id}>
-                  <Col key={item.id}>
-                    <Card>
-                      <Card.Img variant='top' src={`public/imgs/${item.image}`} title={'Menu Image'}/>
-                      {item.best_seller && (
-                        <p style={{ position: "absolute", top: "1rem", color: "aliceblue", backgroundColor: "#F33", padding: '0 2.3rem',  }}>Best Seller</p>
-                      )}
-                      {item.best_product && (
-                        <p style={{ position: "absolute", top: "3rem", color: "aliceblue", backgroundColor: "#3A3", padding: '0 2.3rem',  }}>Best Product</p>
-                      )}
-                      <Card.Body>
-                        <Card.Title>
-                          <div>
-                            <span className="fw-light">{item.name}</span>
-                          </div>
-                          <div>
-                            <span className="fw-normal">{formatCurrency(item.price)}</span>
-                          </div>
-                          <div>
-                            <span className="fw-light text-capitalize mt-2 d-block">{item.category}</span>
-                          </div>
-                          </Card.Title>
-                        <Card.Text>
-                          <Stack direction="horizontal">
-                            {[...Array(5)].map((_, index) => (
-                              <FaStar
-                                key={index}
-                                size={24}
-                                style={{ color: index < rating ? '#ffc107' : '#e4e5e9' }}
-                              />
-                            ))}
-                          </Stack>
-                        </Card.Text>
-                        <Stack gap={3}>
-                          <Button
-                          id="menuDetail"
-                          type="button"
-                          variant="success"
-                          onClick={() => window.location.href = `/menu/${item.slug}`}>
-                            See Detail
-                          </Button>
-                          <Button
-                            id="addItemToOrder"
-                            type="button"
-                            variant='primary'
-                            onClick={() => handleAddToCart(parsedUser.id, item.id, 1)}
-                            value="Order"
-                            title={`Add new items to auth user cart`}
-                            >
-                            Order
-                          </Button>
+              <React.Fragment key={item.id}>
+                <Col key={item.id}>
+                  <Card>
+                    <Card.Img variant='top' src={`public/imgs/${item.image}`} title={'Menu Image'}/>
+                    {item.best_seller && (
+                      <p style={{ position: "absolute", top: "1rem", color: "aliceblue", backgroundColor: "#F33", padding: '0 2.3rem',  }}>Best Seller</p>
+                    )}
+                    {item.best_product && (
+                      <p style={{ position: "absolute", top: "3rem", color: "aliceblue", backgroundColor: "#3A3", padding: '0 2.3rem',  }}>Best Product</p>
+                    )}
+                    <Card.Body>
+                      <Card.Title>
+                        <div>
+                          <span className="fw-light">{item.name}</span>
+                        </div>
+                        <div>
+                          <span className="fw-normal">{formatCurrency(item.price)}</span>
+                        </div>
+                        <div>
+                          <span className="fw-light text-capitalize mt-2 d-block">{item.category}</span>
+                        </div>
+                        </Card.Title>
+                      <Card.Text as={'div'} className="mb-3">
+                        <Stack direction="horizontal">
+                          {[...Array(5)].map((_, index) => (
+                            <FaStar
+                              key={index}
+                              size={24}
+                              style={{ color: index < (ratingByProduct[item.id]?.totalRating / ratingByProduct[item.id]?.totalUsers) ? '#ffc107' : '#e4e5e9' }}
+                            />
+                          ))}
+                          <span className="ms-2">{ratingByProduct[item.id]?.totalRating / ratingByProduct[item.id]?.totalUsers}</span>
+                          <sub>({ratingCountByProduct[item.id]})</sub>
                         </Stack>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </React.Fragment>
-              </>
+                      </Card.Text>
+                      <Stack gap={3}>
+                        <Button
+                        id="menuDetail"
+                        type="button"
+                        variant="success"
+                        onClick={() => window.location.href = `/menu/${item.slug}`}>
+                          See Detail
+                        </Button>
+                        <Button
+                          id="addItemToOrder"
+                          type="button"
+                          variant='primary'
+                          onClick={() => handleAddToCart(parsedUser.id, item.id, 1)}
+                          value="Order"
+                          title={`Add new items to auth user cart`}
+                          >
+                          Order
+                        </Button>
+                      </Stack>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </React.Fragment>
             ))
           )}
         </Row>

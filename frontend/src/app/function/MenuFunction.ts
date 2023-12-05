@@ -1,9 +1,8 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { MenuType } from "../types/Menu"
-import { menuDataState, menuRating } from "../store/MenuStore"
 import { useRecoilState } from "recoil"
-import { Bounce, toast } from "react-toastify"
+import { menuDataState, menuRating } from "../store/MenuStore"
+import { MenuType } from "../types/Menu"
 
 export const useMenu = () => {
     const [menus, setMenus] = useRecoilState(menuDataState)
