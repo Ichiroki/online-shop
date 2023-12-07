@@ -25,5 +25,5 @@ App.set('view engine', 'ejs')
 App.use(authRoutes)
 
 App.listen(3000, () => {
-   console.log(`Server is running on ${3000} : http://localhost:3000`)
+   console.log(`Server is running on 3000 : http://localhost:3000`)
 })

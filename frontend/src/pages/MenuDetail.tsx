@@ -66,7 +66,10 @@ function MenuDetail() {
                                     <Row>
                                         <Col xs={3}>Price</Col>
                                         <Col xs={1} className="p-0">:</Col>
-                                        <Col xs={6} className="p-0">{formatCurrency(menu?.price)}</Col>
+                                        {menu && (
+                                                <Col xs={6} className="p-0">{formatCurrency(menu.price)}</Col>
+                                            )
+                                        }
                                     </Row>
                                     <Row>
                                         <Col xs={3}>Rating</Col>

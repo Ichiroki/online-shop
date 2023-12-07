@@ -4,17 +4,17 @@ import { UsersType } from "./User"
 export type CartsType = {
     id?: number
     quantity: number
-    productId?: string
-    userId?: string
-    products: MenuTypeInCart
-    users: UsersType
+    productId: string
+    userId: string
+    products?: MenuTypeInCart
+    users?: UsersType
 }
 
 export type AddNewItem = {
     id?: number
     quantity: number
-    userId: string
-    productId: string
+    userId?: string
+    productId?: string
     products?: MenuTypeInCart
     users?: UsersType
 }

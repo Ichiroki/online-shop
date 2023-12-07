@@ -106,7 +106,6 @@ export const login_post = async (req, res) => {
                 httpOnly: true,
                 expires: new Date(Date.now() + 8 * 3600000),
                 secure: true,
-                path: 'http://localhost:5173/'
               })
           
               res.status(200).json({user, message: "Login sukses"})

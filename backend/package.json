@@ -29,10 +29,6 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:format": "npx prisma format"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/iamshaunjp/node-express-jwt-auth.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -23,7 +23,7 @@ function MenuInCart({menu}) {
         <div>
             {menu.map((m) => (
                 <React.Fragment key={m.id}>
-                    <Row>
+                    <Row className="mt-3">
                         <Col xs={4}>
                             <img src={`/imgs/${m.products?.image}`} width='105' />
                         </Col>
