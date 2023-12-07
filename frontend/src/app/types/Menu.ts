@@ -12,12 +12,12 @@ export type MenuType = {
     category: string
     quantity: number
     available: number
-    productrating: MenuRating
+    productrating: MenuRating[]
 }
 
 export interface MenuRating {
     id: number
-    productId: number
+    productId: string
     userId: number
     rating: number
     feedback: string
@@ -33,7 +33,7 @@ export type MenuTypeInCart = {
     image: string
 }
 
-export type MenuDetails = {
+export interface MenuDetails {
     id: string
     name: string
     category: string
@@ -42,4 +42,5 @@ export type MenuDetails = {
     image: string
     available: boolean
     rating: number
+    productrating: MenuRating
 }

@@ -1,10 +1,10 @@
 // cartFunction.ts
 import axios from "axios";
 import { useEffect } from "react";
+import { Bounce, toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { cartState } from "../store/ShoppingCartStore";
 import { AddNewItem, CartsType } from "../types/Cart";
-import { Bounce, Slide, toast } from "react-toastify";
 
 const useCart = () => {
   const [carts, setCarts] = useRecoilState<CartsType[]>(cartState);

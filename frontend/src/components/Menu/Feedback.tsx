@@ -32,7 +32,9 @@ function Feedback(props) {
                                     {rating.rating}
                                 </span>
                             </Stack>
-                            {rating.feedback}
+                            {rating.feedback && (
+                                <p>{rating.feedback}</p>
+                            )}
                         {' '}
                     </Stack>
                 </Card.Body>

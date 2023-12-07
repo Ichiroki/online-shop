@@ -25,7 +25,7 @@ function MenuInCart({menu}) {
                 <React.Fragment key={m.id}>
                     <Row>
                         <Col xs={4}>
-                            <img src={`public/imgs/${m.products?.image}`} width='105' />
+                            <img src={`/imgs/${m.products?.image}`} width='105' />
                         </Col>
                         <Col xs={4}>
                             <p style={{ fontSize: ".9rem", marginBottom: ".3rem" }}>

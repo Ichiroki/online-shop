@@ -1,6 +1,6 @@
 // MenuList.tsx
 import React, { useEffect, useState } from "react"
-import { Button, Card, Col, FloatingLabel, Form, Placeholder, Row, Stack } from "react-bootstrap"
+import { Button, Card, Col, Placeholder, Row, Stack } from "react-bootstrap"
 import { FaStar } from 'react-icons/fa'
 import { useRecoilState } from "recoil"
 import useCart from "../../app/function/CartFunction"
@@ -8,6 +8,7 @@ import { useMenu } from "../../app/function/MenuFunction"
 import { menuFilterState, selectedCategoryMenu } from "../../app/store/MenuStore"
 import formatCurrency from "../../app/utilities/formatCurrency"
 import FilterMenu from "./FilterMenu"
+import { NavLink } from "react-router-dom"
 
 function MenuList({searchTerm}) {
 
@@ -16,12 +17,17 @@ function MenuList({searchTerm}) {
   const { handleAddToCart } = useCart()
   const parsedUser = JSON.parse(getAuthUser ?? "null") 
 
+  const [maxRating, setMaxRating] = useState(5)
+  const [minRating, setMinRating] = useState(0)
+
+  const [highestRating, setHighestRating] = useState(false)
+
   const [minPrice, setMinPrice] = useState("5000")
   const [maxPrice, setMaxPrice] = useState("10000")
   const [bestSeller, setBestSeller] = useState(false)
   const [bestProduct, setBestProduct] = useState(false)
   const [avail, setAvail] = useState(false)
-
+  
   const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryMenu)
   const [filteredMenus, setFilteredMenus] = useRecoilState(menuFilterState)
     
@@ -32,13 +38,6 @@ function MenuList({searchTerm}) {
 
     return menuPrice >= min && menuPrice <= max
   }
-
-  const totalRating = rating.reduce((sum, rating) => sum + rating.rating, 0)
-
-  const totalUsers = rating.length
-  const avgRating = totalRating / totalUsers
-
-  console.log(avgRating)
 
   const [show, setShow] = useState(false)
 
@@ -53,16 +52,23 @@ function MenuList({searchTerm}) {
     .filter((item) => (!bestSeller || item.best_seller))
     .filter((item) => (!bestProduct || item.best_product))
     .filter((item) => (!avail || item.available))
+    // .filter((item) => item.productrating.some((rating) => (rating.rating >= minRating || rating.rating <= maxRating)))
     .filter(filterByPrice)
+
+    // const sortedMenus = highestRating ? [...newFilteredMenus].sort((a,b) => {
+    //   const avgRatingA = calculateAverageRating(a.productrating)
+    //   const avgRatingB = calculateAverageRating(b.productrating)
+    //   return avgRatingB - avgRatingA  
+    // }) : newFilteredMenus
+
     setFilteredMenus(newFilteredMenus)
   }
 
-  const ratingCountByProduct = filteredMenus.reduce((countMap, item) => {
-    const productId = item.id
-    const ratingCount = rating.filter((r) => r.productId.toString() === productId).length
-    countMap[productId] = ratingCount
-    return countMap
-  }, {})
+  const calculateAverageRating = (rating) => {
+    const totalRating = rating.reduce((sum, rating) => sum + rating.rating, 0)
+    const totalUsers = rating.length
+    return totalRating / totalUsers
+  }
 
   const ratingByProduct = {}
 
@@ -74,8 +80,8 @@ function MenuList({searchTerm}) {
       ratingByProduct[productId].totalUsers += 1
     } else {
       ratingByProduct[productId] = {
-        totalRating: 0,
-        totalUsers: 0
+        totalRating: r.rating,
+        totalUsers: 1
       }
     }
   })
@@ -97,7 +103,7 @@ function MenuList({searchTerm}) {
     <Row>
       <Col>
         <Button variant="primary" onClick={handleFilterButtonClick} className="mb-3">Filter</Button>
-        <FilterMenu minPrice={minPrice} maxPrice={maxPrice} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} setBestSeller={setBestSeller} show={show} setAvail={setAvail} setBestProduct={setBestProduct}/>
+        <FilterMenu maxPrice={maxPrice} setMaxPrice={setMaxPrice} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} setBestSeller={setBestSeller} show={show} setAvail={setAvail} setBestProduct={setBestProduct} setMaxRating={setMaxRating} setHighestRating={setHighestRating} highestRating={highestRating}/>
         <Row md={2} xs={1} lg={4} className='g-3'>
           {loading ? (
             <>
@@ -154,18 +160,17 @@ function MenuList({searchTerm}) {
                               style={{ color: index < (ratingByProduct[item.id]?.totalRating / ratingByProduct[item.id]?.totalUsers) ? '#ffc107' : '#e4e5e9' }}
                             />
                           ))}
-                          <span className="ms-2">{ratingByProduct[item.id]?.totalRating / ratingByProduct[item.id]?.totalUsers}</span>
-                          <sub>({ratingCountByProduct[item.id]})</sub>
+                          <span className="ms-2">{ratingByProduct[item.id]?.totalRating / ratingByProduct[item.id]?.totalUsers || 0}</span>
+                          <sub>({ratingByProduct[item.id]?.totalUsers || 0})</sub>
                         </Stack>
                       </Card.Text>
                       <Stack gap={3}>
-                        <Button
+                        <NavLink
                         id="menuDetail"
-                        type="button"
-                        variant="success"
-                        onClick={() => window.location.href = `/menu/${item.slug}`}>
+                        className="btn btn-success"
+                        to={`/menu/${item.slug}`}>
                           See Detail
-                        </Button>
+                        </NavLink>
                         <Button
                           id="addItemToOrder"
                           type="button"

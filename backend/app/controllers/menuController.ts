@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client"
-import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
@@ -87,24 +86,23 @@ export const menuGetAPI = async (req, res) => {
                      rating: true,
                      feedback: true,
                      created_at: true,
+                     productId: true,
                      users: {
                         select: {
                            name: true,
                         }
                      }
                   }
-               }  
+               },  
             }
          }) 
          res.status(201).json(menus)
       } else {
-         const menus = await prisma.products.findMany(
-            {
-               include: {
-                  productrating: true,
-               }
+         const menus = await prisma.products.findMany({
+            include: {
+               productrating: true
             }
-         )
+         })
          res.status(201).json(menus)
       }
    } catch(e) {
@@ -117,7 +115,7 @@ export const ratingGetAPI = async(req, res) => {
 
    try {
       if(param1) {
-         const rating = await prisma.productrating.findFirst({
+         const rating = await prisma.productrating.findMany({
             where: {
                products: {
                   slug: param1
@@ -126,19 +124,31 @@ export const ratingGetAPI = async(req, res) => {
             select: {
                rating: true,
                feedback: true,
+               productId: true,
                users: {
                   select: {
-                     name: true
+                     name: true,
+                     email: true,
                   }
-               }
+               },
+               created_at: true,
             }
          })
 
          res.status(201).json(rating)
       } else {
          const rating = await prisma.productrating.findMany({
-            include: {
-               users: true
+            select: {
+               id: true,
+               productId: true,
+               rating: true,
+               users: {
+                  select: {
+                     name: true,
+                     email: true,
+                     _count: true
+                  }
+               }
             }
          })
          res.status(201).json(rating)

@@ -12,7 +12,6 @@ export const requireAuth = async (req, res, next) => {
           if (err) {
             res.redirect('/login')
           } else {
-            console.log(decodedToken)
             next()
           }
         }
@@ -23,6 +22,13 @@ export const requireAuth = async (req, res, next) => {
   } catch(err) {
     console.log('this cookies are not valid')
   }
+}
+
+export const ensureAuth = (req, res, next) => {
+  if(req.isAuthenticated()) {
+    return next()
+  }
+  res.redirect('/')
 }
 
 export const checkUser = async (req, res, next) => {

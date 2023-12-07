@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import { FaStar } from 'react-icons/fa';
-import { useMenu } from '../../app/function/MenuFunction';
 import { Bounce, toast } from 'react-toastify';
-import axios from 'axios';
-import { MenuRating } from '../../app/types/Menu';
+import { ratingState } from '../../app/store/RatingStore';
+import { useRecoilState } from 'recoil';
 
 function MenuRatingModal(props) {
 
     const [hoverRating, setHoverRating] = useState(0)
     const [selectedRating, setSelectedRating] = useState(0)
+
+    const [rating, setRating] = useRecoilState(ratingState)
 
     const [feedback, setFeedback] = useState('')
 
@@ -45,12 +47,16 @@ function MenuRatingModal(props) {
 
                 props.onHide()
                 
-                return await axios.post("/add-rating", {
+                location.reload()
+
+                const response = await axios.post("/add-rating", {
                     userId,
                     productId,
                     rating,
                     feedback
                 })
+
+                setRating(response.data)
             }
         } catch(e) {
           console.log(e)

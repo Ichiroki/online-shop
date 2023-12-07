@@ -1,9 +1,14 @@
 import axios from "axios"
-import { FormEvent, useState } from "react"
+import { useState } from "react"
 import { Nav, Stack } from "react-bootstrap"
 import { ZodError } from "zod"
+import { useHref, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 function Signup() {
+
+  const navigate = useNavigate()
+
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -18,39 +23,37 @@ function Signup() {
     e.preventDefault()
 
     try {
-      await axios.post(
+        const response = await axios.post(
         "/signup",
         {
           name,
           email,
           password,
           confPassword,
-        },
-        {
-          withCredentials: true,
-        },
-      )
-      window.location.href = "/login"
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        // Jika ini adalah AxiosError, coba lihat responsnya
-        if (e.response) {
-          const nameError = e.response.data.error.fieldErrors.name
-          const emailError = e.response.data.error.fieldErrors.email
-          const passwordError = e.response.data.error.fieldErrors.password
-          const confPasswordError = e.response.data.error.fieldErrors.confPassword
+        })
+
+        if(response.data.success && response.status === 201) {
+          navigate('/login')
+
+          toast.success('You are registered')
+        }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response && err.response.data.error && err.response.data.error.fieldErrors !== null) {
+          const nameError = err.response.data.error.fieldErrors.name
+          const emailError = err.response.data.error.fieldErrors.email
+          const passwordError = err.response.data.error.fieldErrors.password
+          const confPasswordError = err.response.data.error.fieldErrors.confPassword
           
           setNameErr(nameError)
           setEmailErr(emailError)
           setPasswordErr(passwordError)
           setConfPasswordErr(confPasswordError)
-        } else {
-          console.error("Request failed before getting a response from the server");
         }
       } else if (e instanceof ZodError) {
-        console.log("Internal server error, please wait " + e);
+        console.log("Internal server error, please wait " + err);
       } else {
-        console.error("Unexpected error occurred:", e);
+        console.error("Unexpected error occurred:", err);
       }
     }
   }

@@ -1,10 +1,7 @@
 import { Col, FloatingLabel, Form, Row, Stack } from "react-bootstrap";
 
-function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, setMinPrice, setMaxPrice, show, setBestSeller, setAvail, setBestProduct}) {
-    const handleMinPriceChange = (e) => {
-        setMinPrice(e.target.value)
-    }
-    
+function FilterMenu({selectedCategory, setSelectedCategory, maxPrice, setMaxPrice, show, setBestSeller, setAvail, setBestProduct, setMaxRating, highestRating, setHighestRating}) {
+
     const handleMaxPriceChange = (e) => {
         setMaxPrice(e.target.value)
     }
@@ -21,10 +18,14 @@ function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, 
         setAvail(e.target.checked)
     }
 
+    const handleHighestRatingChange = (e) => {
+        setHighestRating(e.target.checked)
+    }
+
     return (
         <>
             {show ? (
-                <Row direction="vertical" className="mb-3 justify-content-between gap-3" >
+                <Row direction="vertical" className="mb-3 justify-content-between gap-3">
                     <Form.Label>Category</Form.Label>
                     <Col xs={12}>
                         <Form.Select aria-label="Select Category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
@@ -59,6 +60,9 @@ function FilterMenu({selectedCategory, setSelectedCategory, minPrice, maxPrice, 
                             </Col>
                             <Col md={2}>
                                 <Form.Check type="checkbox" label="Available" onChange={handleAvailableChange}/>
+                            </Col>
+                            <Col md={2}>
+                                <Form.Check type="checkbox" label="Highest Rating" onChange={handleHighestRatingChange}/>
                             </Col>
                         </Stack>
                     </Row>

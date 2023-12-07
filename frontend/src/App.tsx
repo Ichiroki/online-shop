@@ -4,7 +4,7 @@ import Menu from "./pages/Menu"
 import About from "./pages/About"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
-import MenuDetail from "./components/Menu/MenuDetail"
+import MenuDetail from "./pages/MenuDetail"
 
 function App() {
   return (

@@ -55,7 +55,7 @@ export const signup_post = async (req, res) => {
       }
     })
 
-    res.status(302).json({user, success: true, error: null})
+    res.status(201).json({user, success: true, error: null})
   } catch(e) {
     if(e instanceof ZodError) {
       res.status(400).json({success: false, error: e.flatten()})
