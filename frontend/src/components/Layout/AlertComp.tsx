@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Alert } from 'react-bootstrap';
+import { useState } from "react"
+import { Alert } from "react-bootstrap"
 
-function AlertComp({color}) {
-  const [show, setShow] = useState(true);
+function AlertComp({ color }) {
+  const [show, setShow] = useState(true)
 
   if (show) {
     return (
@@ -14,8 +14,8 @@ function AlertComp({color}) {
           Cras mattis consectetur purus sit amet fermentum.
         </p>
       </Alert>
-    );
+    )
   }
 }
 
-export default AlertComp;
+export default AlertComp

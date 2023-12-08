@@ -1,6 +1,6 @@
-import { atom } from 'recoil'
+import { atom } from "recoil"
 
 export const ratingState = atom({
-    key: 'rating',
-    default: 0
+  key: "rating",
+  default: 0,
 })

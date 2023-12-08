@@ -4,7 +4,6 @@ import useCart from "../../app/function/CartFunction"
 import MenuInCart from "../Menu/MenuInCart"
 
 function CartOffcanvas() {
-
   const [show, setShow] = useState(false)
 
   const { carts } = useCart()
@@ -15,12 +14,11 @@ function CartOffcanvas() {
   return (
     <>
       <Button
-        id="cart-offcanvas"
+        id='cart-offcanvas'
         variant='outline-light'
         onClick={handleShow}
         className='rounded-circle'
-        title={`Open Cart Canvas`}
-        >
+        title={`Open Cart Canvas`}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width='18'
@@ -36,16 +34,16 @@ function CartOffcanvas() {
           <Offcanvas.Title>Your Cart</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <Stack direction="vertical" gap={3}>
-                {carts && carts.length > 0 ? (
-                  <>
-                    <MenuInCart menu={carts}/>
-                  </>
-                ) : (
-                  <>
-                    <h1>There's no item in your cart</h1>
-                  </>
-                )}
+          <Stack direction='vertical' gap={3}>
+            {carts && carts.length > 0 ? (
+              <>
+                <MenuInCart menu={carts} />
+              </>
+            ) : (
+              <>
+                <h1>There's no item in your cart</h1>
+              </>
+            )}
           </Stack>
         </Offcanvas.Body>
       </Offcanvas>
