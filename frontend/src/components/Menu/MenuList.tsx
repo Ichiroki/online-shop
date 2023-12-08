@@ -18,7 +18,6 @@ function MenuList({searchTerm}) {
   const parsedUser = JSON.parse(getAuthUser ?? "null") 
 
   const [maxRating, setMaxRating] = useState(5)
-  const [minRating, setMinRating] = useState(0)
 
   const [highestRating, setHighestRating] = useState(false)
 
@@ -46,22 +45,28 @@ function MenuList({searchTerm}) {
   }
 
   const filterMenu = async () => {
-    const newFilteredMenus = await menus
+    const updatedMenus = menus.map((menu) => {
+      const totalRating = menu.productrating.reduce((sum, rating) => sum + rating.rating, 0);
+      const totalUsers = menu.productrating.length;
+      const ratingAvg = totalUsers > 0 ? totalRating / totalUsers : 0;
+
+      return {
+        ...menu,
+        ratingAvg
+      };
+    });
+
+    const newFilteredMenus = updatedMenus
     .filter((menu) => selectedCategory === "all" || menu.category === selectedCategory)
     .filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter((item) => (!bestSeller || item.best_seller))
     .filter((item) => (!bestProduct || item.best_product))
     .filter((item) => (!avail || item.available))
-    // .filter((item) => item.productrating.some((rating) => (rating.rating >= minRating || rating.rating <= maxRating)))
     .filter(filterByPrice)
 
-    // const sortedMenus = highestRating ? [...newFilteredMenus].sort((a,b) => {
-    //   const avgRatingA = calculateAverageRating(a.productrating)
-    //   const avgRatingB = calculateAverageRating(b.productrating)
-    //   return avgRatingB - avgRatingA  
-    // }) : newFilteredMenus
+    const sortedMenus = highestRating ? [...newFilteredMenus].sort((a, b) => b.ratingAvg - a.ratingAvg) : newFilteredMenus;
 
-    setFilteredMenus(newFilteredMenus)
+    setFilteredMenus(sortedMenus)
   }
 
   const calculateAverageRating = (rating) => {
@@ -96,6 +101,8 @@ function MenuList({searchTerm}) {
     maxPrice, 
     bestSeller, 
     bestProduct,
+    maxRating,
+    highestRating
   ])
 
   return (
