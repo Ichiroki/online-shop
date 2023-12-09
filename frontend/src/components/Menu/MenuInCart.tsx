@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react"
 import { Button, Col, Row, Stack } from "react-bootstrap"
 import useCart from "../../app/function/CartFunction"
 import formatCurrency from "../../app/utilities/formatCurrency"
+import { NavLink } from "react-router-dom"
 
 function MenuInCart({ menu }) {
   const { handleAddToCart, handleDeleteFromCart } = useCart()
+  const users = localStorage.getItem('authenticated')
+
+  const parsedUser = JSON.parse(users ?? "null")
 
   const [total, setTotal] = useState(0)
 
@@ -61,6 +65,7 @@ function MenuInCart({ menu }) {
           </Row>
         </React.Fragment>
       ))}
+      <NavLink to={`/cart/${parsedUser.id}`} className="btn btn-primary mt-2">Lihat Selengkapnya</NavLink>
       <hr />
       <Stack>
         <Row style={{ fontSize: "1.4rem" }}>

@@ -9,7 +9,7 @@ function Menu() {
   return (
     <>
       <TopNavbar />
-      <Container className='mb-4'>
+      <Container>
         <Row>
           <Col>
             <h1>Menu</h1>

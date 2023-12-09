@@ -8,9 +8,14 @@ import TopNavbar from "../components/Layout/TopNavbar"
 import formatCurrency from "../app/utilities/formatCurrency"
 import Feedback from "../components/Menu/Feedback"
 import MenuRatingModal from "../components/Menu/MenuRatingModal"
+import useCart from "../app/function/CartFunction"
 
 function MenuDetail() {
   const { slug } = useParams()
+  const { handleAddToCart } = useCart()
+  const getAuthUser = localStorage.getItem("authenticated")
+  const parsedUser = JSON.parse(getAuthUser ?? "null")
+
   const [rating, setRating] = useState<MenuRating[]>([])
   const [menu, setMenu] = useState<MenuDetails | null>(null)
   const [modalShow, setModalShow] = useState(false)
@@ -99,7 +104,7 @@ function MenuDetail() {
                       })}
                     </Col>
                     {avgRating && (
-                      <Col xs={4} className='p-0'>
+                      <Col xs={3} className='p-0'>
                         <>
                           <span>{avgRating}</span>
                           <sub>({rating.length})</sub>
@@ -116,7 +121,12 @@ function MenuDetail() {
                       onClick={() => setModalShow(true)}>
                       Give Rating
                     </Button>
-                    <Button variant='success' className='w-100'>
+                    <Button
+                      variant='success'
+                      className='w-100'
+                      onClick={() =>
+                        handleAddToCart(parsedUser.id, menu?.id, 1)
+                      }>
                       Order
                     </Button>
                   </Stack>

@@ -11,6 +11,10 @@ function CartOffcanvas() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const cartsQtyTotal = carts.reduce((cart) => cart)
+
+  console.log(cartsQtyTotal)
+
   return (
     <>
       <Button

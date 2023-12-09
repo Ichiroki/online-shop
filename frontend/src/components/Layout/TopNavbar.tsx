@@ -53,12 +53,16 @@ function TopNavbar() {
                     <NavDropdown
                       id='profile-nav'
                       title={users?.name}
-                      menuVariant='light'>
+                      menuVariant='light'
+                      data-bs-theme='light'>
                       <NavDropdown.Item href='#action/3.1'>
                         Dashboard
                       </NavDropdown.Item>
                       <NavDropdown.Item href='#action/3.2'>
                         Setting
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href='#action/3.2'>
+                        Cart
                       </NavDropdown.Item>
                       <NavDropdown.Item href='#action/3.3'>
                         Wishlist

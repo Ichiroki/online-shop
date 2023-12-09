@@ -15,9 +15,9 @@ import { NavLink } from "react-router-dom"
 
 function MenuList({ searchTerm }) {
   const getAuthUser = localStorage.getItem("authenticated")
+  const parsedUser = JSON.parse(getAuthUser ?? "null")
   const { menus, loading, rating } = useMenu()
   const { handleAddToCart } = useCart()
-  const parsedUser = JSON.parse(getAuthUser ?? "null")
 
   const [maxRating, setMaxRating] = useState(5)
 
