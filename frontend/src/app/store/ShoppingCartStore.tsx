@@ -5,4 +5,3 @@ export const cartState = atom<CartsType[]>({
   key: "cartState",
   default: [],
 })
-

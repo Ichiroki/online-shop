@@ -1,7 +1,7 @@
 .filter-container {
-    display: none;
+  display: none;
 }
 
 .filter-container.visible {
-    display: block;
+  display: block;
 }

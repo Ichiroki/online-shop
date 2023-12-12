@@ -42,21 +42,23 @@ function Login() {
       if (axios.isAxiosError(e)) {
         // Jika ini adalah AxiosError, coba lihat responsnya
         if (e.response) {
-          console.error("Server responded with status", e.response.status);
-          console.error("Error details:", e.response.data.error.email);
+          console.error("Server responded with status", e.response.status)
+          console.error("Error details:", e.response.data.error.email)
 
           const email = e.response.data.error.email
           const password = e.response.data.error.password
-          
+
           setEmailErr(email)
           setPasswordErr(password)
         } else {
-          console.error("Request failed before getting a response from the server");
+          console.error(
+            "Request failed before getting a response from the server",
+          )
         }
       } else if (e instanceof ZodError) {
-        console.log("Internal server error, please wait " + e);
+        console.log("Internal server error, please wait " + e)
       } else {
-        console.error("Unexpected error occurred:", e);
+        console.error("Unexpected error occurred:", e)
       }
     }
   }
@@ -91,9 +93,7 @@ function Login() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
-                    {emailErr && (
-                      <p className="text-danger">{emailErr}</p>
-                    )}
+                    {emailErr && <p className='text-danger'>{emailErr}</p>}
                   </div>
                   <div className='mb-3'>
                     <label htmlFor='password' className='form-label'>
@@ -108,7 +108,7 @@ function Login() {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     {passwordErr && (
-                      <p className="text-danger">{passwordErr}</p>
+                      <p className='text-danger'>{passwordErr}</p>
                     )}
                   </div>
                   <Stack gap={3} direction='horizontal'>

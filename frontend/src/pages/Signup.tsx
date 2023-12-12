@@ -6,7 +6,6 @@ import { useHref, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 function Signup() {
-
   const navigate = useNavigate()
 
   const [name, setName] = useState("")
@@ -23,37 +22,40 @@ function Signup() {
     e.preventDefault()
 
     try {
-        const response = await axios.post(
-        "/signup",
-        {
-          name,
-          email,
-          password,
-          confPassword,
-        })
+      const response = await axios.post("/signup", {
+        name,
+        email,
+        password,
+        confPassword,
+      })
 
-        if(response.data.success && response.status === 201) {
-          navigate('/login')
+      if (response.data.success && response.status === 201) {
+        navigate("/login")
 
-          toast.success('You are registered')
-        }
+        toast.success("You are registered")
+      }
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        if (err.response && err.response.data.error && err.response.data.error.fieldErrors !== null) {
+        if (
+          err.response &&
+          err.response.data.error &&
+          err.response.data.error.fieldErrors !== null
+        ) {
           const nameError = err.response.data.error.fieldErrors.name
           const emailError = err.response.data.error.fieldErrors.email
           const passwordError = err.response.data.error.fieldErrors.password
-          const confPasswordError = err.response.data.error.fieldErrors.confPassword
-          
+          const confPasswordError =
+            err.response.data.error.fieldErrors.confPassword
+
           setNameErr(nameError)
           setEmailErr(emailError)
           setPasswordErr(passwordError)
           setConfPasswordErr(confPasswordError)
         }
       } else if (e instanceof ZodError) {
-        console.log("Internal server error, please wait " + err);
+        console.log("Internal server error, please wait " + err)
       } else {
-        console.error("Unexpected error occurred:", err);
+        console.error("Unexpected error occurred:", err)
       }
     }
   }
@@ -81,9 +83,7 @@ function Signup() {
                       onChange={(e) => setName(e.target.value)}
                       value={name}
                     />
-                    {nameErr && (
-                      <p className="text-danger">{nameErr}</p>
-                    )}
+                    {nameErr && <p className='text-danger'>{nameErr}</p>}
                   </div>
                   <div className='mb-3'>
                     <label htmlFor='email' className='form-label'>
@@ -97,9 +97,7 @@ function Signup() {
                       onChange={(e) => setEmail(e.target.value)}
                       value={email}
                     />
-                    {emailErr && (
-                      <p className="text-danger">{emailErr}</p>
-                    )}
+                    {emailErr && <p className='text-danger'>{emailErr}</p>}
                   </div>
                   <div className='row'>
                     <div className='col-md-6'>
@@ -116,7 +114,7 @@ function Signup() {
                           value={password}
                         />
                         {passwordErr && (
-                          <p className="text-danger">{passwordErr}</p>
+                          <p className='text-danger'>{passwordErr}</p>
                         )}
                       </div>
                     </div>
@@ -134,7 +132,7 @@ function Signup() {
                           value={confPassword}
                         />
                         {confPasswordErr && (
-                          <p className="text-danger">{confPasswordErr}</p>
+                          <p className='text-danger'>{confPasswordErr}</p>
                         )}
                       </div>
                     </div>

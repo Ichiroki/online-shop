@@ -18,10 +18,6 @@ function FilterMenu(props) {
       setShow(!show)
     }
 
-    const handleMaxPriceChange = (e) => {
-        setMaxPrice(e.target.value)
-    }
-
     const handleBestSellerChange = (e) => {
         setBestSeller(e.target.checked)
     }
@@ -37,6 +33,7 @@ function FilterMenu(props) {
     const handleHighestRatingChange = (e) => {
         setHighestRating(e.target.checked)
     }
+
 
     const handleResetFilter = () => {
         setShow(false)
@@ -109,4 +106,4 @@ function FilterMenu(props) {
     );
 }
 
-export default FilterMenu;
+export default FilterMenu

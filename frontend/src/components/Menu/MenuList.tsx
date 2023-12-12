@@ -6,19 +6,20 @@ import { NavLink } from "react-router-dom"
 import { useRecoilState } from "recoil"
 import useCart from "../../app/function/CartFunction"
 import { useMenu } from "../../app/function/MenuFunction"
-import { menuFilterState, selectedCategoryMenu } from "../../app/store/MenuStore"
+import {
+  menuFilterState,
+  selectedCategoryMenu,
+} from "../../app/store/MenuStore"
 import formatCurrency from "../../app/utilities/formatCurrency"
 import FilterMenu from "./FilterMenu"
 
-function MenuList({searchTerm}) {
-
-  const getAuthUser = localStorage.getItem('authenticated')
-  const {menus, loading, rating} = useMenu()
+function MenuList({ searchTerm }) {
+  const getAuthUser = localStorage.getItem("authenticated")
+  const parsedUser = JSON.parse(getAuthUser ?? "null")
+  const { menus, loading, rating } = useMenu()
   const { handleAddToCart } = useCart()
-  const parsedUser = JSON.parse(getAuthUser ?? "null") 
 
   const [maxRating, setMaxRating] = useState(5)
-  const [minRating, setMinRating] = useState(0)
 
   const [highestRating, setHighestRating] = useState(5)
 
@@ -27,14 +28,17 @@ function MenuList({searchTerm}) {
   const [bestSeller, setBestSeller] = useState(false)
   const [bestProduct, setBestProduct] = useState(false)
   const [avail, setAvail] = useState(false)
-  
-  const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryMenu)
+
+  const [selectedCategory, setSelectedCategory] =
+    useRecoilState(selectedCategoryMenu)
   const [filteredMenus, setFilteredMenus] = useRecoilState(menuFilterState)
-    
+
+  const [filteredMenusLoading, setFilteredMenusLoading] = useState(false)
+
   const filterByPrice = (menu) => {
     const menuPrice = menu.price
-    const min = minPrice !== '' ? parseInt(minPrice) : Number.MIN_SAFE_INTEGER
-    const max = maxPrice !== '' ? parseInt(maxPrice) : Number.MAX_SAFE_INTEGER
+    const min = minPrice !== "" ? parseInt(minPrice) : Number.MIN_SAFE_INTEGER
+    const max = maxPrice !== "" ? parseInt(maxPrice) : Number.MAX_SAFE_INTEGER
 
     return menuPrice >= min && menuPrice <= max
   }
@@ -48,14 +52,47 @@ function MenuList({searchTerm}) {
     .filter((item) => (!avail || item.available))
     // .filter((item) => item.productrating.length > 0)
     .filter(filterByPrice)
+    setFilteredMenusLoading(true)
+
+    const updatedMenus = menus.map((menu) => {
+      const totalRating = menu.productrating.reduce(
+        (sum, rating) => sum + rating.rating,
+        0,
+      )
+      const totalUsers = menu.productrating.length
+      const ratingAvg = totalUsers > 0 ? totalRating / totalUsers : 0
+
+      return {
+        ...menu,
+        ratingAvg,
+      }
+    })
+
+    const newFilteredMenus = updatedMenus
+      .filter(
+        (menu) =>
+          selectedCategory === "all" || menu.category === selectedCategory,
+      )
+      .filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+      .filter((item) => !bestSeller || item.best_seller)
+      .filter((item) => !bestProduct || item.best_product)
+      .filter((item) => !avail || item.available)
+      .filter(filterByPrice)
 
     const sortedMenus = highestRating ? [...newFilteredMenus].sort((a,b) => {
       const avgRatingA = calculateAverageRating(a.productrating)
       const avgRatingB = calculateAverageRating(b.productrating)
       return avgRatingB - avgRatingA  
     }) : newFilteredMenus
+    const sortedMenus = highestRating
+      ? [...newFilteredMenus].sort((a, b) => b.ratingAvg - a.ratingAvg)
+      : newFilteredMenus
 
     setFilteredMenus(sortedMenus)
+    setFilteredMenus(sortedMenus)
+    setFilteredMenusLoading(false)
   }
 
   const calculateAverageRating = (rating) => {
@@ -69,13 +106,13 @@ function MenuList({searchTerm}) {
   rating.forEach((r) => {
     const productId = r.productId
 
-    if(productId in ratingByProduct) {
+    if (productId in ratingByProduct) {
       ratingByProduct[productId].totalRating += r.rating
       ratingByProduct[productId].totalUsers += 1
     } else {
       ratingByProduct[productId] = {
         totalRating: r.rating,
-        totalUsers: 1
+        totalUsers: 1,
       }
     }
   })
@@ -83,14 +120,16 @@ function MenuList({searchTerm}) {
   useEffect(() => {
     filterMenu()
   }, [
-    selectedCategory, 
-    searchTerm, 
+    selectedCategory,
+    searchTerm,
     menus,
-    minPrice, 
-    maxPrice, 
-    bestSeller, 
+    minPrice,
+    maxPrice,
+    bestSeller,
     bestProduct,
     // highestRating
+    maxRating,
+    highestRating,
   ])
 
   return (
@@ -109,16 +148,71 @@ function MenuList({searchTerm}) {
                 <React.Fragment key={index}>
                   <Col>
                     <Card>
-                      <div style={{ width: "100%", height: "200px" }}></div>
+                      <Card.Img
+                        variant='top'
+                        src={`public/imgs/${item.image}`}
+                        title={"Menu Image"}
+                      />
                       <Card.Body>
-                        <Placeholder as={Card.Title} animation="glow">
-                          <Placeholder xs={6}/>
-                        </Placeholder>
-                        <Placeholder as={Card.Text} animation="glow">
-                          <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{' '}
-                          <Placeholder xs={6} /> <Placeholder xs={8} />
-                        </Placeholder>
-                        <Placeholder.Button variant="primary" xs={6} />
+                        <Card.Title>
+                          <div>
+                            <span className='fw-light'>{item.name}</span>
+                          </div>
+                          <div>
+                            <span className='fw-normal'>
+                              {formatCurrency(item.price)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className='fw-light text-capitalize mt-2 d-block'>
+                              {item.category}
+                            </span>
+                          </div>
+                        </Card.Title>
+                        <Card.Text as={"div"} className='mb-3'>
+                          <Stack direction='horizontal'>
+                            {[...Array(5)].map((_, index) => (
+                              <FaStar
+                                key={index}
+                                size={24}
+                                style={{
+                                  color:
+                                    index <
+                                    ratingByProduct[item.id]?.totalRating /
+                                      ratingByProduct[item.id]?.totalUsers
+                                      ? "#ffc107"
+                                      : "#e4e5e9",
+                                }}
+                              />
+                            ))}
+                            <span className='ms-2'>
+                              {ratingByProduct[item.id]?.totalRating /
+                                ratingByProduct[item.id]?.totalUsers || 0}
+                            </span>
+                            <sub>
+                              ({ratingByProduct[item.id]?.totalUsers || 0})
+                            </sub>
+                          </Stack>
+                        </Card.Text>
+                        <Stack gap={3}>
+                          <NavLink
+                            id='menuDetail'
+                            className='btn btn-success'
+                            to={`/menu/${item.slug}`}>
+                            See Detail
+                          </NavLink>
+                          <Button
+                            id='addItemToOrder'
+                            type='button'
+                            variant='primary'
+                            onClick={() =>
+                              handleAddToCart(parsedUser.id, item.id, 1)
+                            }
+                            value='Order'
+                            title={`Add new items to auth user cart`}>
+                            Order
+                          </Button>
+                        </Stack>
                       </Card.Body>
                     </Card>
                   </Col>
