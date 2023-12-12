@@ -34,3 +34,7 @@ Content-Type: application/json
    "rating" : 5,
    "feedback" : "lorem ipsum dolor sit amet..."
 }
+
+###
+
+GET http://127.0.0.1:3000/auth/google 

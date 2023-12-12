@@ -6,15 +6,25 @@ import authController from '../app/controllers/authController';
 import menuController, { addRating } from '../app/controllers/menuController';
 import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
 import paymentController from '../app/controllers/paymentController';
+import passport from 'passport';
 
 const router: Router = Router();
 const csrfProtection = csurf({cookie: true})
+const GoogleStrategy = require('passport-google-oauth20').Strategy
 
 router.use(cors({
    origin: "http://localhost:5173",
    credentials: true,
    preflightContinue: true
 }))
+
+passport.use(new GoogleStrategy({
+   clientID: "906970024535-1sgj1j4l471fl0vd6hrl0prjrov720lo.apps.googleusercontent.com",
+   clientSecret: "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",
+   callbackURL: "http://127.0.0.1:3000/auth/google/callback",
+ }, async (accessToken, refreshToken, profile, done) => {
+   return done(null, profile)
+ }))
 
 // Credentials
 router.get('*', checkUser, csrfProtection)
@@ -26,6 +36,26 @@ router.post('/signup', authController.signup_post)
 router.get('/login', authController.login_get)
 router.post('/login', authController.login_post)
 router.get('/logout', authController.logout_get)
+
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+
+router.get('/auth/google/callback', passport.authenticate('google', {
+   failureRedirect: '/login', 
+   failureMessage: true, 
+   successRedirect: '/',
+   session: true,
+   scope: ['profile', 'email']
+}), (req, res) => {
+   res.redirect('/')
+})
+
+passport.serializeUser(function(user, cb) {
+   cb(null, user)
+})
+
+passport.deserializeUser(function(obj : null, cb) {
+   cb(null, obj)
+})
 
 // Menu
 router.get('/menu', menuController.menuGet)
@@ -39,7 +69,6 @@ router.post('/add-rating', async(req, res) => {
    }
 })
 
-
 router.post('/add-to-cart', requireAuth, async(req, res) => {
    try {
       const { userId, productId, quantity } = req.body
@@ -49,6 +78,7 @@ router.post('/add-to-cart', requireAuth, async(req, res) => {
       console.log(e)
    }
 })
+
 router.post('/delete-from-cart', requireAuth, async(req, res) => {
    try {
       const { userId, productId } = req.body

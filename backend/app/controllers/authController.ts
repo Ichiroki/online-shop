@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { ZodError } from 'zod'
 import { LoginUser, RegisterUser } from '../../prisma/validation/userRequest'
 import { hashPassword } from '../utils/password'
+import passport from 'passport'
 
 const prisma = new PrismaClient()
 
@@ -87,7 +88,6 @@ export const login_post = async (req, res) => {
               name: true,
               email: true,
               password: true,
-              cart: true
             }
           })
   
