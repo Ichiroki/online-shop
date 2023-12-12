@@ -34,6 +34,10 @@ function FilterMenu(props) {
         setHighestRating(e.target.checked)
     }
 
+    const handleMaxPriceChange = (e) => {
+        setMaxPrice(e.target.value)
+    }
+
 
     const handleResetFilter = () => {
         setShow(false)

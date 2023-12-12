@@ -5,7 +5,6 @@ import Login from "./pages/Login"
 import Menu from "./pages/Menu"
 import MenuDetail from "./pages/MenuDetail"
 import Signup from "./pages/Signup"
-import UserCart from "./pages/UserCart"
 
 function App() {
   return (

@@ -1,8 +1,7 @@
 // MenuList.tsx
 import React, { useEffect, useState } from "react"
 import { Button, Card, Col, Placeholder, Row, Stack } from "react-bootstrap"
-import { FaStar } from 'react-icons/fa'
-import { NavLink } from "react-router-dom"
+import { FaStar } from "react-icons/fa"
 import { useRecoilState } from "recoil"
 import useCart from "../../app/function/CartFunction"
 import { useMenu } from "../../app/function/MenuFunction"
@@ -12,6 +11,7 @@ import {
 } from "../../app/store/MenuStore"
 import formatCurrency from "../../app/utilities/formatCurrency"
 import FilterMenu from "./FilterMenu"
+import { NavLink } from "react-router-dom"
 
 function MenuList({ searchTerm }) {
   const getAuthUser = localStorage.getItem("authenticated")
@@ -21,7 +21,7 @@ function MenuList({ searchTerm }) {
 
   const [maxRating, setMaxRating] = useState(5)
 
-  const [highestRating, setHighestRating] = useState(5)
+  const [highestRating, setHighestRating] = useState(false)
 
   const [minPrice, setMinPrice] = useState("5000")
   const [maxPrice, setMaxPrice] = useState("10000")
@@ -43,15 +43,13 @@ function MenuList({ searchTerm }) {
     return menuPrice >= min && menuPrice <= max
   }
 
+  const [show, setShow] = useState(false)
+
+  const handleFilterButtonClick = () => {
+    setShow(!show)
+  }
+
   const filterMenu = async () => {
-    const newFilteredMenus = await menus
-    .filter((menu) => selectedCategory === "all" || menu.category === selectedCategory)
-    .filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    .filter((item) => (!bestSeller || item.best_seller))
-    .filter((item) => (!bestProduct || item.best_product))
-    .filter((item) => (!avail || item.available))
-    // .filter((item) => item.productrating.length > 0)
-    .filter(filterByPrice)
     setFilteredMenusLoading(true)
 
     const updatedMenus = menus.map((menu) => {
@@ -81,16 +79,10 @@ function MenuList({ searchTerm }) {
       .filter((item) => !avail || item.available)
       .filter(filterByPrice)
 
-    const sortedMenus = highestRating ? [...newFilteredMenus].sort((a,b) => {
-      const avgRatingA = calculateAverageRating(a.productrating)
-      const avgRatingB = calculateAverageRating(b.productrating)
-      return avgRatingB - avgRatingA  
-    }) : newFilteredMenus
     const sortedMenus = highestRating
       ? [...newFilteredMenus].sort((a, b) => b.ratingAvg - a.ratingAvg)
       : newFilteredMenus
 
-    setFilteredMenus(sortedMenus)
     setFilteredMenus(sortedMenus)
     setFilteredMenusLoading(false)
   }
@@ -127,32 +119,85 @@ function MenuList({ searchTerm }) {
     maxPrice,
     bestSeller,
     bestProduct,
-    // highestRating
     maxRating,
     highestRating,
   ])
 
   return (
     <>
-    <Row>
-      <Col>
-        <Row className="g-4">
-          <Col xs={12} xl={4}>
-            <FilterMenu maxPrice={maxPrice} setMaxPrice={setMaxPrice} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} setBestSeller={setBestSeller} setAvail={setAvail} setBestProduct={setBestProduct} setMaxRating={setMaxRating} setHighestRating={setHighestRating} highestRating={highestRating}/>
-          </Col>
-          <Col xs={12} xl={8}>
-            <Row md={2} xs={1} lg={3} className='g-3'>
-          {loading ? (
-            <>
-              {[...Array(4)].map((_,index) => (
-                <React.Fragment key={index}>
-                  <Col>
+      <Row>
+        <Col>
+          <FilterMenu
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            setBestSeller={setBestSeller}
+            show={show}
+            setAvail={setAvail}
+            setBestProduct={setBestProduct}
+            setMaxRating={setMaxRating}
+            setHighestRating={setHighestRating}
+            highestRating={highestRating}
+          />
+          <Row md={2} xs={1} lg={4} className='g-3 mt-3'>
+            {filteredMenusLoading ? (
+              <>
+                {[...Array(4)].map((_, index) => (
+                  <React.Fragment key={index}>
+                    <Col>
+                      <Card>
+                        <div style={{ width: "100%", height: "200px" }}></div>
+                        <Card.Body>
+                          <Placeholder as={Card.Title} animation='glow'>
+                            <Placeholder xs={6} />
+                          </Placeholder>
+                          <Placeholder as={Card.Text} animation='glow'>
+                            <Placeholder xs={7} /> <Placeholder xs={4} />{" "}
+                            <Placeholder xs={4} /> <Placeholder xs={6} />{" "}
+                            <Placeholder xs={8} />
+                          </Placeholder>
+                          <Placeholder.Button variant='primary' xs={6} />
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </React.Fragment>
+                ))}
+              </>
+            ) : (
+              filteredMenus.map((item) => (
+                <React.Fragment key={item.id}>
+                  <Col key={item.id}>
                     <Card>
                       <Card.Img
                         variant='top'
                         src={`public/imgs/${item.image}`}
                         title={"Menu Image"}
                       />
+                      {item.best_seller && (
+                        <p
+                          style={{
+                            position: "absolute",
+                            top: "1rem",
+                            color: "aliceblue",
+                            backgroundColor: "#F33",
+                            padding: "0 2.3rem",
+                          }}>
+                          Best Seller
+                        </p>
+                      )}
+                      {item.best_product && (
+                        <p
+                          style={{
+                            position: "absolute",
+                            top: "3rem",
+                            color: "aliceblue",
+                            backgroundColor: "#3A3",
+                            padding: "0 2.3rem",
+                          }}>
+                          Best Product
+                        </p>
+                      )}
                       <Card.Body>
                         <Card.Title>
                           <div>
@@ -217,83 +262,11 @@ function MenuList({ searchTerm }) {
                     </Card>
                   </Col>
                 </React.Fragment>
-              ))}
-            </>
-          ) : (
-            filteredMenus.map((item) => (
-              <React.Fragment key={item.id}>
-                <Col key={item.id}>
-                  <Card>
-                    <Card.Img variant='top' src={`public/imgs/${item.image}`} title={'Menu Image'}/>
-                    {/* {item.best_seller && (
-                      <p style={{ position: "absolute", top: "1rem", color: "aliceblue", backgroundColor: "#F33", padding: '0 2.3rem',  }}>Best Seller</p>
-                    )}
-                    {item.best_product && (
-                      <p style={{ position: "absolute", top: "3rem", color: "aliceblue", backgroundColor: "#3A3", padding: '0 2.3rem',  }}>Best Product</p>
-                    )} */}
-                    <Card.Body>
-                      <Card.Title>
-                        <div>
-                          <span className="fw-light">{item.name}</span>
-                          <br/>
-                          <Stack direction="horizontal" gap={2}>
-                            {item.best_seller && (
-                              <span className="badge rounded-pill text-bg-success my-2">Best Seller</span>
-                            )}
-                            {item.best_product && (
-                              <span className="badge rounded-pill text-bg-warning my-2">Best Product</span>
-                            )}
-                          </Stack>
-                        </div>
-                        <div>
-                          <span className="fw-normal">{formatCurrency(item.price)}</span>
-                        </div>
-                        <div>
-                          <span className="fw-light text-capitalize mt-2 d-block">{item.category}</span>
-                        </div>
-                        </Card.Title>
-                      <Card.Text as={'div'} className="mb-3">
-                        <Stack direction="horizontal">
-                          {[...Array(5)].map((_, index) => (
-                            <FaStar
-                              key={index}
-                              size={24}
-                              style={{ color: index < (ratingByProduct[item.id]?.totalRating / ratingByProduct[item.id]?.totalUsers) ? '#ffc107' : '#e4e5e9' }}
-                            />
-                          ))}
-                          <span className="ms-2">{ratingByProduct[item.id]?.totalRating / ratingByProduct[item.id]?.totalUsers || 0}</span>
-                          <sub>({ratingByProduct[item.id]?.totalUsers || 0})</sub>
-                        </Stack>
-                      </Card.Text>
-                      <Stack gap={3}>
-                        <NavLink
-                        id="menuDetail"
-                        className="btn btn-success"
-                        to={`/menu/${item.slug}`}>
-                          See Detail
-                        </NavLink>
-                        <Button
-                          id="addItemToOrder"
-                          type="button"
-                          variant='primary'
-                          onClick={() => handleAddToCart(parsedUser.id, item.id, 1)}
-                          value="Order"
-                          title={`Add new items to auth user cart`}
-                          >
-                          Order
-                        </Button>
-                      </Stack>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </React.Fragment>
-            ))
-          )}
-            </Row>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+              ))
+            )}
+          </Row>
+        </Col>
+      </Row>
     </>
   )
 }
