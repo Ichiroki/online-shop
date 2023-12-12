@@ -34,6 +34,7 @@ function Login() {
         },
       )
       const parsedData = JSON.stringify(response.data.user)
+      console.log(parsedData)
       localStorage.setItem("authenticated", parsedData)
       setLoggedIn(parsedData)
       window.location.href = "/"

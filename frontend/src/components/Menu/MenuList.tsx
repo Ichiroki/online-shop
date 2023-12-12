@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react"
 import { Button, Card, Col, Placeholder, Row, Stack } from "react-bootstrap"
 import { FaStar } from 'react-icons/fa'
+import { NavLink } from "react-router-dom"
 import { useRecoilState } from "recoil"
 import useCart from "../../app/function/CartFunction"
 import { useMenu } from "../../app/function/MenuFunction"
 import { menuFilterState, selectedCategoryMenu } from "../../app/store/MenuStore"
 import formatCurrency from "../../app/utilities/formatCurrency"
 import FilterMenu from "./FilterMenu"
-import { NavLink } from "react-router-dom"
 
 function MenuList({searchTerm}) {
 
@@ -20,7 +20,7 @@ function MenuList({searchTerm}) {
   const [maxRating, setMaxRating] = useState(5)
   const [minRating, setMinRating] = useState(0)
 
-  const [highestRating, setHighestRating] = useState(false)
+  const [highestRating, setHighestRating] = useState(5)
 
   const [minPrice, setMinPrice] = useState("5000")
   const [maxPrice, setMaxPrice] = useState("10000")
@@ -39,12 +39,6 @@ function MenuList({searchTerm}) {
     return menuPrice >= min && menuPrice <= max
   }
 
-  const [show, setShow] = useState(false)
-
-  const handleFilterButtonClick = () => {
-    setShow(!show)
-  }
-
   const filterMenu = async () => {
     const newFilteredMenus = await menus
     .filter((menu) => selectedCategory === "all" || menu.category === selectedCategory)
@@ -52,16 +46,16 @@ function MenuList({searchTerm}) {
     .filter((item) => (!bestSeller || item.best_seller))
     .filter((item) => (!bestProduct || item.best_product))
     .filter((item) => (!avail || item.available))
-    // .filter((item) => item.productrating.some((rating) => (rating.rating >= minRating || rating.rating <= maxRating)))
+    // .filter((item) => item.productrating.length > 0)
     .filter(filterByPrice)
 
-    // const sortedMenus = highestRating ? [...newFilteredMenus].sort((a,b) => {
-    //   const avgRatingA = calculateAverageRating(a.productrating)
-    //   const avgRatingB = calculateAverageRating(b.productrating)
-    //   return avgRatingB - avgRatingA  
-    // }) : newFilteredMenus
+    const sortedMenus = highestRating ? [...newFilteredMenus].sort((a,b) => {
+      const avgRatingA = calculateAverageRating(a.productrating)
+      const avgRatingB = calculateAverageRating(b.productrating)
+      return avgRatingB - avgRatingA  
+    }) : newFilteredMenus
 
-    setFilteredMenus(newFilteredMenus)
+    setFilteredMenus(sortedMenus)
   }
 
   const calculateAverageRating = (rating) => {
@@ -96,15 +90,19 @@ function MenuList({searchTerm}) {
     maxPrice, 
     bestSeller, 
     bestProduct,
+    // highestRating
   ])
 
   return (
     <>
     <Row>
       <Col>
-        <Button variant="primary" onClick={handleFilterButtonClick} className="mb-3">Filter</Button>
-        <FilterMenu maxPrice={maxPrice} setMaxPrice={setMaxPrice} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} setBestSeller={setBestSeller} show={show} setAvail={setAvail} setBestProduct={setBestProduct} setMaxRating={setMaxRating} setHighestRating={setHighestRating} highestRating={highestRating}/>
-        <Row md={2} xs={1} lg={4} className='g-3'>
+        <Row className="g-4">
+          <Col xs={12} xl={4}>
+            <FilterMenu maxPrice={maxPrice} setMaxPrice={setMaxPrice} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} setBestSeller={setBestSeller} setAvail={setAvail} setBestProduct={setBestProduct} setMaxRating={setMaxRating} setHighestRating={setHighestRating} highestRating={highestRating}/>
+          </Col>
+          <Col xs={12} xl={8}>
+            <Row md={2} xs={1} lg={3} className='g-3'>
           {loading ? (
             <>
               {[...Array(4)].map((_,index) => (
@@ -133,16 +131,25 @@ function MenuList({searchTerm}) {
                 <Col key={item.id}>
                   <Card>
                     <Card.Img variant='top' src={`public/imgs/${item.image}`} title={'Menu Image'}/>
-                    {item.best_seller && (
+                    {/* {item.best_seller && (
                       <p style={{ position: "absolute", top: "1rem", color: "aliceblue", backgroundColor: "#F33", padding: '0 2.3rem',  }}>Best Seller</p>
                     )}
                     {item.best_product && (
                       <p style={{ position: "absolute", top: "3rem", color: "aliceblue", backgroundColor: "#3A3", padding: '0 2.3rem',  }}>Best Product</p>
-                    )}
+                    )} */}
                     <Card.Body>
                       <Card.Title>
                         <div>
                           <span className="fw-light">{item.name}</span>
+                          <br/>
+                          <Stack direction="horizontal" gap={2}>
+                            {item.best_seller && (
+                              <span className="badge rounded-pill text-bg-success my-2">Best Seller</span>
+                            )}
+                            {item.best_product && (
+                              <span className="badge rounded-pill text-bg-warning my-2">Best Product</span>
+                            )}
+                          </Stack>
                         </div>
                         <div>
                           <span className="fw-normal">{formatCurrency(item.price)}</span>
@@ -188,6 +195,8 @@ function MenuList({searchTerm}) {
               </React.Fragment>
             ))
           )}
+            </Row>
+          </Col>
         </Row>
       </Col>
     </Row>

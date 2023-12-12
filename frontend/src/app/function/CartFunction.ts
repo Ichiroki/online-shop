@@ -2,25 +2,31 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { Bounce, toast } from "react-toastify";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { authenticatedUserState } from "../store/AuthStore";
 import { cartState } from "../store/ShoppingCartStore";
-import { AddNewItem, CartsType } from "../types/Cart";
+import { CartsType } from "../types/Cart";
 
 const useCart = () => {
   const [carts, setCarts] = useRecoilState<CartsType[]>(cartState);
 
-  const getCartsData = async () => {
-    try {
-      const response = await axios.get('/api/cart')
-      setCarts(response.data)
-    } catch(e) {
-      console.error(e)
+  const users = useRecoilValue(authenticatedUserState)
+
+  if(users) { 
+    const getCartsData = async () => {
+      try {
+        const response = await axios.get('/api/cart')
+        setCarts(response.data)
+      } catch(e) {
+        console.error(e)
+      }
     }
+
+    useEffect(() => {
+      getCartsData()
+    }, [carts.length])
   }
 
-  useEffect(() => {
-    getCartsData()
-  }, [carts.length])
 
   const addToCart = async (userId: string, productId: string, quantity: number) => {
     try {

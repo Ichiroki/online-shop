@@ -82,6 +82,13 @@ export const login_post = async (req, res) => {
             where: {
               email: auth.data.email
             },
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              password: true,
+              cart: true
+            }
           })
   
           if(!user) {
