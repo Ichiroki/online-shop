@@ -1,5 +1,1 @@
-GET http://localhost:3000/add-rating
-
-{
-    
-}
+GET http://localhost:3000/api/menu

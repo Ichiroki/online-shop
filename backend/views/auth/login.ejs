@@ -1,16 +1,16 @@
     <%- include('../partials/header'); -%>
 
     <div class="form">
-      <form action="/signup">
+      <form action="/login">
         <h2>Login</h2>
-        <input type="text" name="_csrf" value="<%= token %>" readonly/>
+        <input type="hidden" name="_csrf" value="<%= token %>" readonly/>
         <label for="email">Email</label>
         <input type="text" name="email"  />
         <div class="email error"></div>
         <label for="password">Password</label>
         <input type="password" name="password"  />
         <div class="password error"></div>
-        <button>login</button>
+        <button type="submit">login</button>
         <a href="/auth/google">Google</a>
       </form>
     </div>
@@ -37,7 +37,7 @@
     try {
       const res = await fetch('/login', { 
         method: 'POST', 
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, csrfToken }),
         headers: {'Content-Type': 'application/json'}
       });
       const data = await res.json();

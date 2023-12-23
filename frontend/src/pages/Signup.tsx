@@ -2,7 +2,7 @@ import axios from "axios"
 import { useState } from "react"
 import { Nav, Stack } from "react-bootstrap"
 import { ZodError } from "zod"
-import { useHref, useNavigate } from "react-router-dom"
+import { NavLink, useHref, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 function Signup() {
@@ -143,7 +143,7 @@ function Signup() {
                     </button>
                     <p className='ms-auto'>
                       Already Registered ?
-                      <Nav.Link href='/login'>Login</Nav.Link>
+                      <Nav.Link to='/login' as={NavLink}>Login</Nav.Link>
                     </p>
                   </Stack>
                 </form>

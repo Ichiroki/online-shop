@@ -171,7 +171,7 @@ function MenuList({ searchTerm }) {
                     <Card>
                       <Card.Img
                         variant='top'
-                        src={`public/imgs/${item.image}`}
+                        src={`/imgs/${item.image}`}
                         title={"Menu Image"}
                       />
                       {item.best_seller && (

@@ -5,9 +5,10 @@ const prisma = new PrismaClient()
 
 export const requireAuth = async (req, res, next) => {
   const token = req.cookies.accessToken
+  const csrf = req.cookies._csrf
 
   try {
-    if (token) {
+    if (token && csrf) {
       jwt.verify(token, 'accessToken', async (err, decodedToken) => {
           if (err) {
             res.redirect('/login')

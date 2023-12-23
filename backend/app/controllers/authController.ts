@@ -5,7 +5,9 @@ import bcrypt from 'bcrypt'
 import { ZodError } from 'zod'
 import { LoginUser, RegisterUser } from '../../prisma/validation/userRequest'
 import { hashPassword } from '../utils/password'
-import passport from 'passport'
+import csrf from 'csrf'
+
+const tokens = new csrf()
 
 const prisma = new PrismaClient()
 
@@ -108,11 +110,18 @@ export const login_post = async (req, res) => {
               })
             } else {
               const token = createToken(user.id)
-  
+              const secret = tokens.create(csrf)
+
               res.cookie('accessToken', token, {
-                httpOnly: true,
-                expires: new Date(Date.now() + 8 * 3600000),
                 secure: true,
+                httpOnly: false,
+                sameSite: 'none',
+              })
+              
+              res.cookie('_csrf', secret, {
+                secure: true,
+                httpOnly: true,
+                sameSite: 'none',
               })
           
               res.status(200).json({user, message: "Login sukses"})
@@ -129,6 +138,7 @@ export const login_post = async (req, res) => {
 
 export const logout_get = (req, res) => {
   res.clearCookie('accessToken')
+  res.clearCookie('_csrf')
   res.redirect('/');
 }
 

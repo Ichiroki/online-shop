@@ -103,7 +103,7 @@ export const menuGetAPI = async (req, res) => {
                productrating: true
             }
          })
-         res.status(201).json(menus)
+         res.status(200).json(menus)
       }
    } catch(e) {
       console.log(e)
@@ -117,9 +117,19 @@ export const ratingGetAPI = async(req, res) => {
       if(param1) {
          const rating = await prisma.productrating.findMany({
             where: {
-               products: {
-                  slug: param1
-               }
+               OR: [
+                  {
+                     products: {
+                        slug: param1
+                     },
+                  },
+                  {
+                     users: {
+                        id: param1
+                     }
+                  }
+
+               ]
             },
             select: {
                rating: true,
@@ -131,11 +141,16 @@ export const ratingGetAPI = async(req, res) => {
                      email: true,
                   }
                },
+               products: {
+                  select: {
+                     name: true
+                  }
+               },
                created_at: true,
             }
          })
 
-         res.status(201).json(rating)
+         res.status(200).json(rating)
       } else {
          const rating = await prisma.productrating.findMany({
             select: {

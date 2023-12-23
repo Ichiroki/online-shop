@@ -61,9 +61,9 @@ function FilterMenu(props) {
             {show && (
                 <>
                 <Collapse in={show}>
-                    <Row direction="vertical" className="mt-3 justify-content-between g-2 border rounded" id="filter-menu">
+                    <Row direction="vertical" className="mt-3 justify-content-between g-2 border rounded p-4 border-primary" id="filter-menu">
                             <Col xs={12}>
-                                <Form.Select aria-label="Select Category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                                <Form.Select aria-label="Select Category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="border-primary">
                                 <option value="all">Category</option>
                                 <option value="food">Food</option>
                                 <option value="drink">Drink</option>
@@ -79,7 +79,8 @@ function FilterMenu(props) {
                                     <Form.Control
                                     type="number"
                                     value={maxPrice}
-                                    onChange={handleMaxPriceChange}>
+                                    onChange={handleMaxPriceChange}
+                                    className="border-primary">
                                     </Form.Control>
                                 </FloatingLabel>
                                 </Col>
