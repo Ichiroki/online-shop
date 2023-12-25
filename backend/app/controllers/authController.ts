@@ -112,7 +112,6 @@ export const login_post = async (req, res) => {
               res.cookie('accessToken', token, {
                 httpOnly: true,
                 expires: new Date(Date.now() + 8 * 3600000),
-                secure: true,
               })
           
               res.status(200).json({user, message: "Login sukses"})

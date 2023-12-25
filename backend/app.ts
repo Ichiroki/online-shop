@@ -15,8 +15,13 @@ App.use(session({
    secret: 'accessToken',
    resave: false,
    saveUninitialized: true,
-   cookie: { secure: true }
  }))
+
+App.use(session({
+   secret: '_csrf',
+   resave: false,
+   saveUninitialized: true,
+}))
 
 App.use(passport.initialize())
 App.use(passport.session())

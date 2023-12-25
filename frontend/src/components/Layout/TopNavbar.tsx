@@ -43,16 +43,12 @@ function TopNavbar() {
               <Nav.Link to='/menu' as={NavLink}>
                 Menu
               </Nav.Link>
-              <Nav.Link to='/about' as={NavLink}>
-                About
-              </Nav.Link>
             </Nav>
             <Nav>
-            {carts.length > 0 && <CartOffcanvas></CartOffcanvas>}
-            <InboxDropdown/>
               {users ? (
-                <>
                   <Nav className='me-2'>
+                    {carts.length > 0 && <CartOffcanvas></CartOffcanvas>}
+                    <InboxDropdown/>
                     <NavDropdown
                       id='profile-nav'
                       title={users?.name}
@@ -75,16 +71,15 @@ function TopNavbar() {
                       </NavDropdown.Item>
                     </NavDropdown>
                   </Nav>
-                </>
               ) : (
-                <>
+                <Nav>
                   <Nav.Link to='/login' as={NavLink}>
                     Login
                   </Nav.Link>
                   <Nav.Link to='/signup' as={NavLink}>
                     Sign Up
                   </Nav.Link>
-                </>
+                </Nav>
               )}
             </Nav>
           </Navbar.Collapse>

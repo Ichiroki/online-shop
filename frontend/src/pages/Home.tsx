@@ -7,6 +7,12 @@ function Home() {
 
   const {menus} = useMenu()
 
+  const automaticsLogout = async () => {
+    console.log(document.cookie)
+  }
+
+  console.log(automaticsLogout())
+
   return (
     <>
       <TopNavbar />
