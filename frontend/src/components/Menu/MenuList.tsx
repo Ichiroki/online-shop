@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom"
 function MenuList({ searchTerm }) {
   const getAuthUser = localStorage.getItem("authenticated")
   const parsedUser = JSON.parse(getAuthUser ?? "null")
-  const { menus, loading, rating } = useMenu()
+  const { menus, rating, sortBy, setSortBy } = useMenu()
   const { handleAddToCart } = useCart()
 
   const [maxRating, setMaxRating] = useState(5)
@@ -44,10 +44,6 @@ function MenuList({ searchTerm }) {
   }
 
   const [show, setShow] = useState(false)
-
-  const handleFilterButtonClick = () => {
-    setShow(!show)
-  }
 
   const filterMenu = async () => {
     setFilteredMenusLoading(true)
@@ -87,12 +83,6 @@ function MenuList({ searchTerm }) {
     setFilteredMenusLoading(false)
   }
 
-  const calculateAverageRating = (rating) => {
-    const totalRating = rating.reduce((sum, rating) => sum + rating.rating, 0)
-    const totalUsers = rating.length
-    return totalRating / totalUsers
-  }
-
   const ratingByProduct = {}
 
   rating.forEach((r) => {
@@ -121,7 +111,10 @@ function MenuList({ searchTerm }) {
     bestProduct,
     maxRating,
     highestRating,
+    sortBy
   ])
+
+
 
   return (
     <>
@@ -139,6 +132,8 @@ function MenuList({ searchTerm }) {
             setMaxRating={setMaxRating}
             setHighestRating={setHighestRating}
             highestRating={highestRating}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
           />
           <Row md={2} xs={1} lg={4} className='g-3 mt-3'>
             {filteredMenusLoading ? (

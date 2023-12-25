@@ -3,9 +3,11 @@ import { Button, Col, Row, Stack } from "react-bootstrap"
 import useCart from "../../app/function/CartFunction"
 import formatCurrency from "../../app/utilities/formatCurrency"
 import { NavLink } from "react-router-dom"
+import { usePayment } from "../../app/function/PaymentFunction"
 
 function MenuInCart({ menu }) {
   const { handleAddToCart, handleDeleteFromCart } = useCart()
+  const { paymentVABCA } = usePayment()
   const users = localStorage.getItem('authenticated')
 
   const parsedUser = JSON.parse(users ?? "null")
@@ -73,7 +75,7 @@ function MenuInCart({ menu }) {
             Total : {isNaN(total) ? "Invalid Total" : formatCurrency(total)}
           </Col>
           <Col xs={2}>
-            <Button variant='primary'>Order</Button>
+            <Button variant='primary' onClick={paymentVABCA}>Order</Button>
           </Col>
         </Row>
       </Stack>

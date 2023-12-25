@@ -5,6 +5,7 @@ import Login from "./pages/Login"
 import Menu from "./pages/Menu"
 import MenuDetail from "./pages/MenuDetail"
 import Signup from "./pages/Signup"
+import Rating from "./pages/Rating"
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path='/about' element={<About />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<Signup />}></Route>
-        {/* <Route path="/cart/:id" element={<UserCart/>}></Route> */}
+        <Route path='/rating/:id' element={<Rating />}/>
       </Routes>
     </>
   )

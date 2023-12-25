@@ -1,66 +1,46 @@
-import { PrismaClient } from "@prisma/client"
-const midtrans = require('midtrans-node')
 import axios from 'axios'
+import midtransClient from 'midtrans-client'
 
-const prisma = new PrismaClient()
+let serverKey = "Mid-server-n16mveRIye2Tw955Qd4-z28v"
 
-export const paymentMethodGopay = async (req, res) => {
-    const { orderId, amount, itemDetails, userId } = req.body
-    const serverKey = process.env.MIDTRANS_SERVER_KEY
+let encodedKey = Buffer.from(serverKey + ':').toString('base64')
 
+new midtransClient.CoreApi({
+    isProduction: false,
+    serverKey,
+    clientKey: "Mid-client--5_kwW7KRbjvs5BF"
+ })
+
+const dataVABCA = {
+    payment_type: 'bank_transfer',
+    transaction_details: {
+      order_id: 'order-101',
+      gross_amount: 44000,
+      merchant_id: "G013964521"
+    },
+    va_numbers: [
+        {
+            "bank": "bca",
+            "va_number": "812785002530231"
+        }
+    ],
+  };
+
+export const paymentMethodVABCA = async (req, res) => {
     try {
-        // axios({
-        //     url: "https://app.sandbox.midtrans.com/snap/v1/transactions",
-        //     method: "post",
-        //     headers: {
-        //         "Content-Type" : "application/json",
-        //         "Accept" : "application/json",
-        //         "Authorization": "Basic" + Buffer.from(serverKey).toString("base64")
-        //     },
-        //     data: {
-        //         transactionDetails: {
-        //             order_id: "order-is-" + getCurrentTimestamp(),
-        //             gross_amount: 10000
-        //         }
-        //     }
-        // })
-        const transactionDetails = {
-            orderId,
-            grossAmount: amount
-        }
-
-        const transactionOptions = {
-            gopay: {
-                callback: ''
-            }
-        }
-
-        const customerDetails = await prisma.users.findUnique({
-            where: {
-                id: userId
-            },
-            select: {
-                name: true,
-                email: true
-            }
+        const response = await axios.post('https://api.sandbox.midtrans.com/v2/charge', dataVABCA, {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Basic ${encodedKey}`,
+                'Content-Type': 'application/json',
+              },
         })
-
-        const parameter = {
-            transactionDetails,
-            itemDetails,
-            customerDetails,
-            creditCard: {
-                secure: true
-            }
-        }
-
-        // const transaction = await snap.createTransaction(parameter, transactionOptions)
-
-        // res.json({ token: transaction.redirect_url })
-    } catch(e) {
-        console.log("Payment failed " + e)
-        res.statue(500).json({ error: "Internal server error bjirlach" })
+        console.log('midtrans response : ', response.data)
+        res.json(response.data)
+    }
+    catch(e) {
+        console.error('internal server error, please wait ', e)
     }
 }
 
-export default { paymentMethodGopay }
+export default { paymentMethodVABCA }

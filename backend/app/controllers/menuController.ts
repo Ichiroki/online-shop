@@ -73,6 +73,7 @@ export const addRating = async (userId: string, productId: string, rating: numbe
 
 export const menuGetAPI = async (req, res) => {
    const {param1} =  req.params
+   const {order} = req.query
 
    try {
       if(param1) {
@@ -101,6 +102,9 @@ export const menuGetAPI = async (req, res) => {
          const menus = await prisma.products.findMany({
             include: {
                productrating: true
+            },
+            orderBy: {
+               name: order === 'desc' ? 'desc' : 'asc'
             }
          })
          res.status(201).json(menus)
@@ -117,14 +121,26 @@ export const ratingGetAPI = async(req, res) => {
       if(param1) {
          const rating = await prisma.productrating.findMany({
             where: {
-               products: {
-                  slug: param1
-               }
+               OR: [{
+                  products: {
+                     slug: param1
+                  }
+               },
+               {
+                  users: {
+                     id: param1
+                  }
+               }]
             },
             select: {
                rating: true,
                feedback: true,
-               productId: true,
+               products: {
+                  select: {
+                     name: true,
+                     slug: true
+                  }
+               },
                users: {
                   select: {
                      name: true,

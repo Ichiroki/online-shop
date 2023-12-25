@@ -7,10 +7,13 @@ import menuController, { addRating } from '../app/controllers/menuController';
 import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
 import paymentController from '../app/controllers/paymentController';
 import passport from 'passport';
+import axios from 'axios';
 
 const router: Router = Router();
 const csrfProtection = csurf({cookie: true})
 const GoogleStrategy = require('passport-google-oauth20').Strategy
+
+
 
 router.use(cors({
    origin: "http://localhost:5173",
@@ -25,6 +28,7 @@ passport.use(new GoogleStrategy({
  }, async (accessToken, refreshToken, profile, done) => {
    return done(null, profile)
  }))
+
 
 // Credentials
 router.get('*', checkUser, csrfProtection)
@@ -89,7 +93,9 @@ router.post('/delete-from-cart', requireAuth, async(req, res) => {
    }
 })
 
-router.post('/payment/gopay', requireAuth, paymentController.paymentMethodGopay)
+// Order
+
+router.post('/payment/bca/va', paymentController.paymentMethodVABCA)
 
 // For API
 router.get('/api/menu', menuController.menuGetAPI)

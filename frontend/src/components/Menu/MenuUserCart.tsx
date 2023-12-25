@@ -60,7 +60,7 @@ function MenuUserCart({menu}) {
                   }
                   title={`Increase quantity`}>
                   +
-                </Button>
+                </Button> 
               </Col>
             </Row>
           </React.Fragment>

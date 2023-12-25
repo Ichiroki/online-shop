@@ -5,6 +5,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import useCart from "../../app/function/CartFunction"
 import { authenticatedUserState } from "../../app/store/AuthStore"
 import CartOffcanvas from "../Cart/CartOffcanvas"
+import InboxDropdown from "../Feedback/InboxDropdown"
 
 function TopNavbar() {
   const users = useRecoilValue(authenticatedUserState)
@@ -47,13 +48,14 @@ function TopNavbar() {
               </Nav.Link>
             </Nav>
             <Nav>
+            {carts.length > 0 && <CartOffcanvas></CartOffcanvas>}
+            <InboxDropdown/>
               {users ? (
                 <>
                   <Nav className='me-2'>
                     <NavDropdown
                       id='profile-nav'
                       title={users?.name}
-                      menuVariant='light'
                       data-bs-theme='light'>
                       <NavDropdown.Item href='#action/3.1'>
                         Dashboard
@@ -85,7 +87,6 @@ function TopNavbar() {
                 </>
               )}
             </Nav>
-            {carts.length > 0 && <CartOffcanvas></CartOffcanvas>}
           </Navbar.Collapse>
         </Container>
       </Navbar>

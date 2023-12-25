@@ -9,13 +9,15 @@ export const useMenu = () => {
   const [loading, setLoading] = useState(false)
   const [rating, setRating] = useRecoilState(menuRating)
 
+  const [sortBy, setSortBy] = useState('asc') 
+
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResult, setSearchResult] = useState<MenuType[]>([])
 
-  const getMenu = async () => {
+  const getMenu = async (order = 'asc') => {
     setLoading(true)
     try {
-      const response = await axios.get("/api/menu")
+      const response = await axios.get(`/api/menu?order=${order}`)
       setMenus(response.data)
       setLoading(false)
     } catch (error) {
@@ -43,7 +45,7 @@ export const useMenu = () => {
   useEffect(() => {
     getMenu()
     getRating()
-  }, [])
+  }, [sortBy])
 
   return {
     menus,
@@ -54,5 +56,7 @@ export const useMenu = () => {
     setMenus,
     setSearchQuery,
     handleSearch,
+    sortBy,
+    setSortBy
   }
 }

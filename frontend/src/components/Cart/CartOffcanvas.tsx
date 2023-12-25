@@ -11,17 +11,12 @@ function CartOffcanvas() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const cartsQtyTotal = carts.reduce((cart) => cart)
-
-  console.log(cartsQtyTotal)
-
   return (
     <>
       <Button
         id='cart-offcanvas'
-        variant='outline-light'
         onClick={handleShow}
-        className='rounded-circle'
+        className='rounded me-2'
         title={`Open Cart Canvas`}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
