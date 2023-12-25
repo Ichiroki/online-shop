@@ -29,9 +29,9 @@ function MenuInCart({ menu }) {
           <>
           {menu.map((m) => (
             <>
-              <Row className='mt-3' key={m.id}>
+              <Row className='' key={m.id}>
                 <Col xs={4}>
-                  <img src={`/imgs/${m.products?.image}`} width='105' />
+                  <img src={`/imgs/${m.products?.image}`} width='105' className="border rounded" />
                 </Col>
                 <Col xs={4}>
                   <p style={{ fontSize: ".9rem", marginBottom: ".3rem" }}>
@@ -44,7 +44,7 @@ function MenuInCart({ menu }) {
                     {m.products?.price * m.quantity}
                   </p>
                 </Col>
-                <Col gap={2} xs={4}>
+                <Col gap={2} xs={4} className="align-items-center d-flex">
                   <Button
                     type='button'
                     variant='danger'

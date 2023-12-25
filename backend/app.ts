@@ -3,8 +3,12 @@ import express from 'express'
 import session from 'express-session'
 import authRoutes from './routes/authRoutes'
 import passport from 'passport'
+import { Server } from 'socket.io'
+import * as http from 'http'
 
 const App = express()
+const server =http.createServer(App)
+const io = new Server(server)
 const ngrok = require('@ngrok/ngrok')
 
 // middleware
@@ -30,13 +34,25 @@ App.use(session({
 App.use(passport.initialize())
 App.use(passport.session())
 
-// view engine
 App.set('view engine', 'ejs')
 
-// routes
 App.use(authRoutes)
 
-App.listen(3000, () => {
+io.on('connection', (socket) => {
+   console.log('A user connected')
+
+      socket.on('chat message', (msg) => {
+         console.log(`Message from client : ${msg}`)
+
+         io.emit('chat message', msg)
+      })
+
+      socket.on('disconnect', () => {
+         console.log('A user disconnected')
+      })
+})
+
+server.listen(3000, () => {
    console.log(`Server is running on http://127.0.0.1:3000`);
 });
 

@@ -54,7 +54,18 @@ model users {
   name          String
   password      String
   cart          cart[]
+  help_chat     help_chat[]
   productrating productrating[]
+}
+
+model help_chat {
+  id         String   @id @unique(map: "chat_id_key")
+  userId     String
+  messages   String
+  created_at DateTime
+  users      users    @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "help_chat_userId_fkey")
 }
 
 model productrating {

@@ -1,12 +1,12 @@
 import { Stack } from "react-bootstrap";
 import { FaStar } from "react-icons/fa";
-import diffForHumans from "../../app/utilities/timeFormat";
+import diffForHumans from "../../../app/utilities/timeFormat";
 
 function RatingBlock({rating}) {
 
     return (
         <>
-            <Stack className="bg-light-subtle p-3 rounded border mb-3">
+            <Stack className="bg-light-subtle p-3 rounded border mb-3" id="feedback">
                 <Stack direction="horizontal">
                     <span>Your Feedback At {rating.products.name}</span>
                     <small className="ms-auto">{diffForHumans(rating.created_at)}</small>
