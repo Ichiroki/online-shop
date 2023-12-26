@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom"
 function MenuList({ searchTerm }) {
   const getAuthUser = localStorage.getItem("authenticated")
   const parsedUser = JSON.parse(getAuthUser ?? "null")
-  const { menus, rating, sortBy, setSortBy } = useMenu()
+  const { menus, rating, sortOrder, setSortOrder } = useMenu()
   const { handleAddToCart } = useCart()
 
   const [maxRating, setMaxRating] = useState(5)
@@ -25,6 +25,7 @@ function MenuList({ searchTerm }) {
 
   const [minPrice, setMinPrice] = useState("5000")
   const [maxPrice, setMaxPrice] = useState("10000")
+
   const [bestSeller, setBestSeller] = useState(false)
   const [bestProduct, setBestProduct] = useState(false)
   const [avail, setAvail] = useState(false)
@@ -48,39 +49,44 @@ function MenuList({ searchTerm }) {
   const filterMenu = async () => {
     setFilteredMenusLoading(true)
 
-    const updatedMenus = menus.map((menu) => {
-      const totalRating = menu.productrating.reduce(
-        (sum, rating) => sum + rating.rating,
-        0,
-      )
-      const totalUsers = menu.productrating.length
-      const ratingAvg = totalUsers > 0 ? totalRating / totalUsers : 0
-
-      return {
-        ...menu,
-        ratingAvg,
-      }
-    })
-
-    const newFilteredMenus = updatedMenus
-      .filter(
-        (menu) =>
-          selectedCategory === "all" || menu.category === selectedCategory,
-      )
-      .filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-      .filter((item) => !bestSeller || item.best_seller)
-      .filter((item) => !bestProduct || item.best_product)
-      .filter((item) => !avail || item.available)
-      .filter(filterByPrice)
-
-    const sortedMenus = highestRating
-      ? [...newFilteredMenus].sort((a, b) => b.ratingAvg - a.ratingAvg)
-      : newFilteredMenus
-
-    setFilteredMenus(sortedMenus)
-    setFilteredMenusLoading(false)
+    try {
+      const updatedMenus = menus.map((menu) => {
+        const totalRating = menu.productrating.reduce(
+          (sum, rating) => sum + rating.rating,
+          0,
+        )
+        const totalUsers = menu.productrating.length
+        const ratingAvg = totalUsers > 0 ? totalRating / totalUsers : 0
+  
+        return {
+          ...menu,
+          ratingAvg,
+        }
+      })
+  
+      const newFilteredMenus = updatedMenus
+        .filter(
+          (menu) =>
+            selectedCategory === "all" || menu.category === selectedCategory,
+        )
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+        .filter((item) => !bestSeller || item.best_seller)
+        .filter((item) => !bestProduct || item.best_product)
+        .filter((item) => !avail || item.available)
+        .filter(filterByPrice)
+  
+      const sortedMenus = highestRating
+        ? [...newFilteredMenus].sort((a, b) => b.ratingAvg - a.ratingAvg)
+        : newFilteredMenus
+  
+      setFilteredMenus(sortedMenus)
+      setFilteredMenusLoading(false)
+    } catch(e) {
+      console.error('filter cannot be started because there was an error exist', e)
+      setFilteredMenusLoading(true)
+    }
   }
 
   const ratingByProduct = {}
@@ -111,7 +117,7 @@ function MenuList({ searchTerm }) {
     bestProduct,
     maxRating,
     highestRating,
-    sortBy
+    sortOrder
   ])
 
 
@@ -132,8 +138,8 @@ function MenuList({ searchTerm }) {
             setMaxRating={setMaxRating}
             setHighestRating={setHighestRating}
             highestRating={highestRating}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
           />
           <Row md={2} xs={1} lg={4} className='g-3 mt-3'>
             {filteredMenusLoading ? (

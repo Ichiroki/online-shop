@@ -74,6 +74,7 @@ export const addRating = async (userId: string, productId: string, rating: numbe
 export const menuGetAPI = async (req, res) => {
    const {param1} =  req.params
    const {order} = req.query
+   const sortOrder = order === "asc" ? "asc" : "desc"
 
    try {
       if(param1) {
@@ -95,7 +96,7 @@ export const menuGetAPI = async (req, res) => {
                      }
                   }
                },  
-            }
+            },
          }) 
          res.status(201).json(menus)
       } else {

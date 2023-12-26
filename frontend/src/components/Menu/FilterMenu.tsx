@@ -11,8 +11,8 @@ function FilterMenu(props) {
     const setAvail = props.setAvail
     const setBestProduct = props.setBestProduct
     const setHighestRating = props.setHighestRating
-    const sortBy = props.sortBy
-    const setSortBy = props.setSortBy
+    const sortOrder = props.sortOrder
+    const setSortOrder = props.setSortOrder
 
     const [show, setShow] = useState(false)
 
@@ -40,8 +40,8 @@ function FilterMenu(props) {
         setMaxPrice(e.target.value)
     }
 
-    const handleSortBy = (e) => {
-        setSortBy(e.target.value)
+    const handleSortOptionChange = (e) => {
+        setSortOrder(e.target.value)
     }
 
     const handleResetFilter = () => {
@@ -79,9 +79,9 @@ function FilterMenu(props) {
                                         <p>Sort By : </p>
                                     </Col>
                                     <Col xs={6}>
-                                        <Form.Select aria-label="Select Category" value={sortBy} onChange={handleSortBy}>
-                                        <option value="asc">A - Z</option>
-                                        <option value="desc">Z - A</option>
+                                        <Form.Select aria-label="Select Category" onChange={handleSortOptionChange}>
+                                            <option value="asc">A - Z</option>
+                                            <option value="desc">Z - A</option>
                                         </Form.Select>
                                     </Col>
                                 </Row>
