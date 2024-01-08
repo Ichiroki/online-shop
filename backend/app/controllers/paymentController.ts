@@ -1,46 +1,58 @@
-import axios from 'axios'
 import midtransClient from 'midtrans-client'
+const { v4: uuidv4 } = require('uuid')
 
-let serverKey = "Mid-server-n16mveRIye2Tw955Qd4-z28v"
-
-let encodedKey = Buffer.from(serverKey + ':').toString('base64')
-
-new midtransClient.CoreApi({
+let snap = new midtransClient.Snap({
     isProduction: false,
-    serverKey,
-    clientKey: "Mid-client--5_kwW7KRbjvs5BF"
+    serverKey: process.env.MIDTRANS_SERVER_KEY,
+    clientKey: process.env.MIDTRANS_CLIENT_KEY
  })
 
-const dataVABCA = {
-    payment_type: 'bank_transfer',
-    transaction_details: {
-      order_id: 'order-101',
-      gross_amount: 44000,
-      merchant_id: "G013964521"
-    },
-    va_numbers: [
-        {
-            "bank": "bca",
-            "va_number": "812785002530231"
+export const pay = () => {
+    let parameter = {
+            payment_type: 'qris',
+            transaction_details: {
+                order_id: uuidv4(),
+                gross_amount: 0
+            },
+            item_details: [
+                {
+                    id: uuidv4(),
+                    name: 'Tyrannosaurus Rex 3D Models',
+                    quantity: 1,
+                    price: 75000
+                },
+                {
+                    id: uuidv4(),
+                    name: 'Hippo 3D Models',
+                    quantity: 1,
+                    price: 50000
+                },
+            ],
+            customer_details: {
+                first_name: 'Fahrezi',
+                last_name: ' Rizqiawan',
+                email: 'fahrezirizqiawan12649@gmail.com',
+                phone: '087820154350',
+                billing_address:  {
+                    address: 'jl.sibuta gua hantu no.120',
+                city: 'Depok',
+                postal_code: '16436'
+            },
+            qris: {
+                "acquirer": "gopay"
+            }
         }
-    ],
-  };
+   }
 
-export const paymentMethodVABCA = async (req, res) => {
-    try {
-        const response = await axios.post('https://api.sandbox.midtrans.com/v2/charge', dataVABCA, {
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Basic ${encodedKey}`,
-                'Content-Type': 'application/json',
-              },
-        })
-        console.log('midtrans response : ', response.data)
-        res.json(response.data)
-    }
-    catch(e) {
-        console.error('internal server error, please wait ', e)
-    }
+   const totalAmount = parameter.item_details.reduce(
+    (total, item) => total + item.price, 0
+   )
+
+   parameter.transaction_details.gross_amount = totalAmount
+
+    snap.createTransaction(parameter)
+    .then(console.log)
+    .catch(e => console.log(e))
 }
 
-export default { paymentMethodVABCA }
+export default { pay }

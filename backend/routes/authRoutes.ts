@@ -1,13 +1,12 @@
 import cors from 'cors';
 import csurf from 'csurf';
 import { Router } from 'express';
+import passport from 'passport';
 import addToCartController, { addToCart, deleteFromCart } from '../app/controllers/addToCartController';
 import authController from '../app/controllers/authController';
 import menuController, { addRating } from '../app/controllers/menuController';
-import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
 import paymentController from '../app/controllers/paymentController';
-import passport from 'passport';
-import axios from 'axios';
+import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
 
 const router: Router = Router();
 const csrfProtection = csurf({cookie: true})
@@ -95,7 +94,7 @@ router.post('/delete-from-cart', requireAuth, async(req, res) => {
 
 // Order
 
-router.post('/payment/bca/va', paymentController.paymentMethodVABCA)
+router.get('/pay', paymentController.pay)
 
 // For API
 router.get('/api/menu', menuController.menuGetAPI)

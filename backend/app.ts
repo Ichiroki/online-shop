@@ -3,6 +3,7 @@ import express from 'express'
 import session from 'express-session'
 import authRoutes from './routes/authRoutes'
 import passport from 'passport'
+import ngrok from '@ngrok/ngrok'
 
 const App = express()
 
@@ -32,6 +33,18 @@ App.set('view engine', 'ejs')
 // routes
 App.use(authRoutes)
 
-App.listen(3000, () => {
-   console.log(`Server is running on 3000 : http://127.0.0.1:3000`)
-})
+const server = App.listen(3000, async () => {
+   console.log(`Server is running on http://127.0.0.1:3000`);
+ 
+   // Jalankan Ngrok setelah server dimulai
+   try {
+     const url = await ngrok.connect({
+       addr: 3000,
+       authtoken: '2ZhAy778yySIbctG354XiNBiuoW_Uzy4zaAoov9howbH6dL4', // Ganti dengan authtoken Ngrok Anda
+     });
+ 
+     console.log(`Ngrok tunnel is active at: ${url}`);
+   } catch (error) {
+     console.error('Error starting Ngrok:', error);
+   }
+ });
