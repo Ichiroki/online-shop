@@ -7,19 +7,42 @@ import { usePayment } from "../../app/function/PaymentFunction"
 
 function MenuInCart({ menu }) {
   const { handleAddToCart, handleDeleteFromCart } = useCart()
-  const { paymentVABCA } = usePayment()
+  const { payment } = usePayment()
   const users = localStorage.getItem('authenticated')
 
   const parsedUser = JSON.parse(users ?? "null")
 
   const [total, setTotal] = useState(0)
+  const [combinedMenu, setCombinedMenu] = useState<any[]>([])
 
   const getTotal = () => {
-    const allQtyTotal = menu.reduce((total, item) => {
-      return total + item.products?.price * item.quantity
-    }, 0)
-    setTotal(allQtyTotal)
-  }
+    const combinedMenuArray = [];
+
+    menu.forEach((m) => {
+      const existingItem = combinedMenuArray.find((item) => item.products.id === m.products.id);
+
+      if (existingItem) {
+        existingItem.quantity += m.quantity;
+        existingItem.total += m.products.price * m.quantity;
+      } else {
+        combinedMenuArray.push({
+          ...m,
+          total: m.products.price * m.quantity,
+          transactionDetails: {
+            productId: m.products.id,
+            quantity: m.quantity,
+            // Tambahkan informasi lain yang dibutuhkan
+          },
+        });
+      }
+    });
+
+    setCombinedMenu(combinedMenuArray);
+
+    // Hitung total dari combinedMenuArray
+    const allQtyTotal = combinedMenuArray.reduce((total, item) => total + item.total, 0);
+    setTotal(allQtyTotal);
+  };
 
   useEffect(() => {
     getTotal()
@@ -75,7 +98,7 @@ function MenuInCart({ menu }) {
             Total : {isNaN(total) ? "Invalid Total" : formatCurrency(total)}
           </Col>
           <Col xs={2}>
-            <Button variant='primary' onClick={paymentVABCA}>Order</Button>
+            <Button variant='primary' onClick={() => payment(users, total, menu)}>Order</Button>
           </Col>
         </Row>
       </Stack>

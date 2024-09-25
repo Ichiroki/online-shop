@@ -6,6 +6,7 @@ import { ZodError } from 'zod'
 import { LoginUser, RegisterUser } from '../../prisma/validation/userRequest'
 import { hashPassword } from '../utils/password'
 import passport from 'passport'
+import csrf from '../utils/csrf'
 
 const prisma = new PrismaClient()
 
@@ -17,11 +18,7 @@ const createToken = (id: string) => {
   });
 };
 
-const generateCSRFToken = () => {
-  return crypto.randomBytes(32).toString('hex')
-}
-
-const csrfToken = generateCSRFToken()
+const csrfToken = csrf()
 
 // controller actions
 export const signup_get = (req, res) => {

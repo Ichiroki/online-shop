@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import jwt from 'jsonwebtoken'
+import csrf from '../utils/csrf'
 
 const prisma = new PrismaClient()
 
@@ -32,29 +33,32 @@ export const ensureAuth = (req, res, next) => {
 }
 
 export const checkUser = async (req, res, next) => {
-  const token = req.cookies.accessToken;
+  const token = req.cookies.accessToken
 
   try {
     if (token) {
       jwt.verify(token, 'accessToken', async (err, decodedToken) => {
         if (err) {
-          res.locals.authenticated = null;
+          res.locals.authenticated = null
+          res.locals.csrf = null
         } else {
           let user = await prisma.users.findFirst({
             where: {
               id: decodedToken.id
             }
           });
-          res.locals.authenticated = user;
+          res.locals.csrf = csrf()
+          res.locals.authenticated = user
           next();
         }
-      });
+      })
     } else {
-      res.locals.authenticated = null;
-      next();
+      res.locals.csrf = null
+      res.locals.authenticated = null
+      next()
     }
   } catch(err) {
-    console.log('storing information failed');
-    next();
+    console.log('storing information failed')
+    next()
   }
-};
+}

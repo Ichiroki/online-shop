@@ -1,7 +1,7 @@
 import axios from "axios"
 import cryptoRandomString from "crypto-random-string"
 import { useState } from "react"
-import { Nav, Stack } from "react-bootstrap"
+import { Button, Nav, Stack } from "react-bootstrap"
 import { useSetRecoilState } from "recoil"
 import { ZodError } from "zod"
 import { authenticatedUserState } from "../app/store/AuthStore"
@@ -62,6 +62,18 @@ function Login() {
     }
   }
 
+  const handleGoogle = async () => {
+    try {
+      const response = await axios.get('/auth/google', {
+        // headers: {
+        //   'Content-Type' : 'application/json'
+        // }
+      })
+      console.log(response.data)
+    } catch (error) {
+    }
+  }
+
   return (
     <>
       <div className='row h-100 d-flex align-items-center justify-content-center'>
@@ -118,6 +130,17 @@ function Login() {
                       Doesn't have an account ?
                       <Nav.Link href='/signup'>Signup</Nav.Link>
                     </p>
+                  </Stack>
+                  <h1 className="text-center h6 mb-3">Or log in with</h1>
+                  <Stack gap={3}>
+                      <Stack gap={3} direction="horizontal" className="mx-auto">
+                        <Button variant="success" onClick={handleGoogle}>
+                          <i className="bi bi-google"></i>
+                        </Button>
+                        <Button variant="primary">
+                          <i className="bi bi-facebook"></i>
+                        </Button>
+                      </Stack>
                   </Stack>
                 </form>
               </div>

@@ -1,7 +1,7 @@
     <%- include('../partials/header'); -%>
 
     <div class="form">
-      <form action="/signup">
+      <form action="/login" method="post">
         <h2>Login</h2>
         <input type="text" name="_csrf" value="<%= token %>" readonly/>
         <label for="email">Email</label>

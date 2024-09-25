@@ -20,6 +20,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth": "^2.0.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-google-oidc": "^0.1.0",
     "ts-node-dev": "^2.0.0",
     "uuid": "^9.0.1",
     "validator": "^13.1.1",
@@ -27,8 +28,8 @@
   },
   "scripts": {
     "dev": "nodemon app.ts",
-    "prisma:migrate": "npx prisma migrate dev",
-    "prisma:format": "npx prisma format",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:format": "prisma format",
     "build": "tsc"
   },
   "keywords": [],

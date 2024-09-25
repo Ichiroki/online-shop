@@ -1,6 +1,6 @@
 import cors from 'cors';
 import csurf from 'csurf';
-import { Router } from 'express';
+import express from 'express';
 import passport from 'passport';
 import addToCartController, { addToCart, deleteFromCart } from '../app/controllers/addToCartController';
 import authController from '../app/controllers/authController';
@@ -8,24 +8,24 @@ import menuController, { addRating } from '../app/controllers/menuController';
 import paymentController from '../app/controllers/paymentController';
 import { checkUser, requireAuth } from '../app/middleware/authMiddleware';
 
-const router: Router = Router();
+const router = express();
 const csrfProtection = csurf({cookie: true})
-const GoogleStrategy = require('passport-google-oauth20').Strategy
-
-
+const GoogleStrategy = require('passport-google-oidc').Strategy
 
 router.use(cors({
-   origin: "http://localhost:5173",
+   origin: ["http://localhost:5173"],
    credentials: true,
    preflightContinue: true
 }))
 
 passport.use(new GoogleStrategy({
-   clientID: "906970024535-1sgj1j4l471fl0vd6hrl0prjrov720lo.apps.googleusercontent.com",
-   clientSecret: "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",
+   clientID: process.env.GOOGLE_CLIENT_ID,
+   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
    callbackURL: "http://127.0.0.1:3000/auth/google/callback",
+   scope: ['profile'],
+   state: true
  }, async (accessToken, refreshToken, profile, done) => {
-   return done(null, profile)
+   console.log(refreshToken)
  }))
 
 
@@ -45,15 +45,17 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 
 router.get('/auth/google/callback', passport.authenticate('google', {
    failureRedirect: '/login', 
    failureMessage: true, 
-   successRedirect: '/',
+   // successRedirect: '/',
    session: true,
    scope: ['profile', 'email']
 }), (req, res) => {
-   res.redirect('/')
+   console.log(res)
 })
 
 passport.serializeUser(function(user, cb) {
-   cb(null, user)
+   process.nextTick(() => {
+      cb( null, user)
+   })
 })
 
 passport.deserializeUser(function(obj : null, cb) {
@@ -94,7 +96,7 @@ router.post('/delete-from-cart', requireAuth, async(req, res) => {
 
 // Order
 
-router.get('/pay', paymentController.pay)
+router.post('/pay', paymentController.createTransaction)  
 
 // For API
 router.get('/api/menu', menuController.menuGetAPI)
